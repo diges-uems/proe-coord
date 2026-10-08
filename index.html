@@ -202,7 +202,7 @@ h1{margin:0 0 22px;font-size:32px;font-weight:700}
 .selo-gov{position:absolute;left:10px;bottom:28px;width:220px;text-align:left;font-size:8.5px;line-height:1.35;border:1px solid #1351b4;border-left:5px solid #1351b4;border-radius:3px;padding:5px 8px;color:#1351b4;background:#f3f7fd;opacity:0;transform:scale(1.4);transition:all .5s cubic-bezier(.3,1.5,.5,1)}
 .selo-gov.on{opacity:1;transform:none}.selo-gov b{display:block;font-size:9.5px}
 .janela-gov{position:fixed;left:50%;top:50%;z-index:55;width:520px;margin:-180px 0 0 -260px;background:#fff;border-radius:10px;box-shadow:0 24px 70px rgba(0,0,0,.45);overflow:hidden;opacity:0;transform:translateY(30px);pointer-events:none;transition:all .45s}
-.janela-gov.on{opacity:1;transform:none;pointer-events:auto}
+.janela-gov.on{opacity:1;transform:none;pointer-events:auto;box-shadow:0 24px 70px rgba(0,0,0,.45),0 0 0 100vmax rgba(10,18,32,.45)}
 .barra-gov{height:34px;background:#e8ebf0;display:flex;align-items:center;gap:6px;padding:0 12px}
 .barra-gov i{width:10px;height:10px;border-radius:50%;background:#c3c9d2}
 .barra-gov span{margin-left:10px;background:#fff;border-radius:12px;padding:2px 12px;font-size:12px;color:#444}
@@ -222,6 +222,8 @@ h1{margin:0 0 22px;font-size:32px;font-weight:700}
 .baixados i{color:var(--azul);font-size:18px}
 .pasta div.novo.on{animation:destaca 2.4s ease-out both}
 .pasta .chip{margin-left:auto}
+.pasta div.dentro{margin-left:26px;background:#fff;border:1px dashed #d6dbe3}
+.pasta div.dentro.on{animation:destaca 2.4s ease-out both}
 /* legenda dos capítulos e repetição (motion avulso) */
 .legenda{position:fixed;left:24px;bottom:22px;z-index:60;width:430px;display:flex;gap:12px;align-items:flex-start;background:rgba(2,36,100,.95);color:#fff;padding:14px 18px 15px 14px;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.3);opacity:0;transform:translateY(10px);transition:opacity .4s,transform .4s}
 .legenda.on{opacity:1;transform:none}
@@ -444,9 +446,10 @@ h1{margin:0 0 22px;font-size:32px;font-weight:700}
   <div class="bloco">
     <h6><i class="ph-fill ph-folder" style="color:#e2a400"></i>DRIVE Eleição / Inscrições 2026</h6>
     <div class="pasta" id="pasta">
-      <div class="on"><i class="ph-fill ph-file-pdf r"></i>Ficha de Inscrição, Ana Paula Ribeiro (assinado).pdf</div>
-      <div class="on"><i class="ph-fill ph-file-pdf r"></i>Ficha de Inscrição, Carlos E. Nogueira (assinado).pdf</div>
-      <div class="novo"><i class="ph-fill ph-file-pdf r"></i><b>Ficha de Inscrição, Marcos Vinícius Arantes (assinado).pdf</b><span class="chip">Nova</span></div>
+      <div class="on"><i class="ph-fill ph-folder a"></i>Ana Paula Ribeiro - Pedagogia - Campo Grande</div>
+      <div class="on"><i class="ph-fill ph-folder a"></i>Carlos E. Nogueira - Agronomia - Aquidauana</div>
+      <div class="novo"><i class="ph-fill ph-folder-open a"></i><b>Marcos Vinícius Arantes - Matemática - Licenciatura - Dourados</b><span class="chip">Nova</span></div>
+      <div class="dentro"><i class="ph-fill ph-file-pdf r"></i>ficha-inscricao_assinado.pdf</div>
     </div>
   </div>
 </aside>
@@ -566,7 +569,7 @@ h1{margin:0 0 22px;font-size:32px;font-weight:700}
 })();
 </script>
 <div class="legenda" id="legenda"><b id="leg-n">1/6</b><div><strong id="leg-t"></strong><span id="leg-i"></span></div></div>
-<div class="fim" id="fim"><div class="caixa"><h3>Inscrição concluída</h3><p>Em caso de dúvidas, encaminhe um e-mail para <a href="mailto:proe@uems.br">proe@uems.br</a>.</p><button onclick="location.reload()"><i class="ph-bold ph-arrow-counter-clockwise"></i> Assistir novamente</button></div></div>
+<div class="fim" id="fim"><div class="caixa"><h3>Inscrição concluída</h3><p>Em caso de dúvidas, encaminhe um e-mail para <a href="mailto:proe@uems.br">proe@uems.br</a>.</p><button onclick="location.replace(location.pathname + '?v=' + Date.now())"><i class="ph-bold ph-arrow-counter-clockwise"></i> Assistir novamente</button></div></div>
 <script>
 const $ = (s) => document.querySelector(s);
 const CAND = { nome: 'Marcos Vinícius Arantes', email: 'marcos.arantes@uems.br' };
@@ -613,6 +616,16 @@ Motion.cap = (t) => {
   $('#leg-n').textContent = nCap + '/6'; $('#leg-t').textContent = t; $('#leg-i').textContent = INSTR[t] || '';
   const l = $('#legenda'); l.classList.add('on'); l.classList.remove('troca'); void l.offsetWidth; l.classList.add('troca');
 };
+// ao recarregar (Assistir novamente) o navegador restaura o que já foi digitado: zera tudo
+function zerarCampos() {
+  document.querySelectorAll('input').forEach((i) => {
+    i.setAttribute('autocomplete', 'off');
+    if (i.type === 'checkbox') i.checked = false; else i.value = i.defaultValue;
+  });
+  $('#seguir1').disabled = true;
+}
+zerarCampos();
+addEventListener('pageshow', zerarCampos);
 Motion.run(async (M) => {
   // 1. Portal da PROE
   M.cap('Portal da PROE');
@@ -662,7 +675,7 @@ Motion.run(async (M) => {
   await M.wait(500);
   const DADOS = [['#nome', CAND.nome], ['#matricula', '104582317'], ['#rg', '1234567'], ['#cpf', '123.456.789-09'],
     ['#nasc', '14/05/1981'], ['#curso', 'Matemática - Licenciatura'], ['#unidade', 'Dourados'], ['#emec', '123456'], ['#lotacao', 'Dourados']];
-  for (const [sel, v] of DADOS) await M.type(sel, v, { delay: 32 });
+  for (const [sel, v] of DADOS) await M.type(sel, v, { delay: 32, limpar: true });
   await M.click('#seguir2', { pausa: 250 });
 
   // 5. Requerimento em PDF e assinatura Gov.br
@@ -697,10 +710,16 @@ Motion.run(async (M) => {
   await M.wait(1300);
   $('#assinar-gov').hidden = true; $('#ok-gov').hidden = false;
   $('#arq-gov span').textContent = 'ficha-inscricao_assinado.pdf';
-  $('#selo-gov').classList.add('on');
+  await M.wait(1500);
+  // fecha o assinador e abre o PDF já assinado
+  $('#gov').classList.remove('on');
+  await M.wait(500);
   $('#modal-pdf').classList.add('on');
-  await M.wait(2300);
-  $('#modal-pdf').classList.remove('on'); $('#gov').classList.remove('on');
+  await M.wait(700);
+  $('#selo-gov').classList.add('on');
+  await M.mostrar($('#selo-gov'), { rolar: false, ms: 700 });
+  await M.wait(2200);
+  $('#modal-pdf').classList.remove('on');
   $('#baixado-nome').textContent = 'ficha-inscricao_assinado.pdf';
   await M.wait(600);
   await M.click('#seguir3', { pausa: 250 });
@@ -737,7 +756,9 @@ Motion.run(async (M) => {
   $('#bastidor').classList.add('on');
   await M.wait(900);
   $('#pasta .novo').classList.add('on');
-  await M.wait(4800);
+  await M.wait(900);
+  $('#pasta .dentro').classList.add('on');
+  await M.wait(4200);
   $('#legenda').classList.remove('on');
   $('#fim').classList.add('on');
 });
