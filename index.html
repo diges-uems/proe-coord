@@ -1,0 +1,741 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Motion, Inscrição para Coordenação de Curso</title>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<style>
+/* Cena: inscrição de candidato(a) à coordenação de curso pelo Moodle da PROE.
+   Visual reproduz proe.uems.br (tema Almond B) e o formulário do Gabinete (Apps Script). */
+:root{
+  --azul:#004f9e; --azul-esc:#002f6b; --marinho:#022464; --dourado:#c8a84b; --amarelo:#f0ad1c;
+  --tinta:#1d2125; --tinta-2:#5b6470; --linha:#dee2e6; --fundo-sec:#b3c9e3; --creme:#f4f3ee;
+  --ok:#1e7a46; --ok-soft:#e5f3ea; --gold-soft:#fbf1d3;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:auto}
+body{margin:0;background:#fff;color:var(--tinta);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif}
+a{color:inherit;text-decoration:none}
+button{font:inherit;cursor:pointer}
+.tela{display:none}
+.tela.on{display:block;animation:entra .45s ease-out}
+@keyframes entra{from{opacity:0}to{opacity:1}}
+
+/* ---------- barra superior do Moodle ---------- */
+.nav{position:sticky;top:0;z-index:20;height:60px;display:flex;align-items:center;gap:28px;padding:0 22px;background:#fff;border-bottom:1px solid var(--linha)}
+.nav.faixa{border-top:4px solid var(--azul);height:64px}
+.logo{height:34px;display:flex;align-items:center}
+.logo img{height:34px;display:block}
+.logo .txt{display:none;font:italic 900 26px/1 Arial,sans-serif;color:var(--azul);letter-spacing:-.5px}
+.logo.sem-img img{display:none}.logo.sem-img .txt{display:block}
+.menu{display:flex;gap:18px;font-weight:600;color:#3c4248;font-size:15px}
+.menu a.ativo{color:var(--amarelo)}
+.menu i{font-size:11px;margin-left:3px}
+.nav .dir{margin-left:auto;display:flex;align-items:center;gap:16px;color:#3c4248;font-size:18px}
+.avatar{width:32px;height:32px;border-radius:50%;background:#e9ecef;display:grid;place-items:center;font-size:12px;font-weight:600;color:#495057}
+.sep{width:1px;height:28px;background:var(--linha)}
+
+/* ---------- página inicial ---------- */
+.hero{height:330px;background:
+  linear-gradient(rgba(0,79,158,.18),rgba(0,47,107,.25)),
+  url("https://proe.uems.br/pluginfile.php/1/theme_almondb/sliderimage1/1781639591/uems.png") center 38%/cover,
+  linear-gradient(120deg,#0a4fa6,#1f6fd0 55%,#0b3f86)}
+.titulo-sec{text-align:center;margin:44px 0 30px}
+.titulo-sec h2{display:inline-block;margin:0;padding-bottom:8px;font-size:20px;font-weight:900;letter-spacing:1px;color:var(--azul);border-bottom:4px solid #d6d9dd;border-radius:0 0 2px 2px}
+.titulo-sec h2 b{display:inline-block;width:12px;height:12px;border-radius:50%;background:#d6d9dd;margin:0 10px;vertical-align:1px}
+.cards{width:906px;margin:0 auto 60px;display:grid;grid-template-columns:repeat(3,286px);gap:24px 24px}
+.card{height:155px;border-radius:30px 5px;padding:26px 30px;color:#fff;background:linear-gradient(var(--azul),var(--azul-esc));box-shadow:0 3px 9px rgba(0,0,0,.3),0 1px 3px rgba(0,0,0,.2);transition:transform .25s,box-shadow .25s}
+.card.hover{transform:translateY(-4px);box-shadow:0 10px 22px rgba(0,0,0,.32)}
+.card h3{margin:0 0 18px;display:flex;align-items:center;gap:14px;font-size:24px;font-weight:700;letter-spacing:.3px}
+.card h3 i{font-size:30px}
+.card p{margin:0;font-size:13.5px;line-height:1.5;opacity:.95}
+
+/* ---------- miolo das páginas internas ---------- */
+.miolo{width:1008px;margin:0 auto;padding:44px 0 80px}
+.migalha{font-size:11px;color:var(--tinta);display:flex;gap:7px;margin-bottom:10px}
+.migalha span.s{color:#868e96}
+.migalha .ult{color:#6c757d}
+h1{margin:0 0 22px;font-size:32px;font-weight:700}
+.abas{display:flex;gap:4px;border-bottom:1px solid var(--linha);margin-bottom:24px}
+.abas a{padding:10px 13px 13px;font-weight:600;font-size:14.5px;border-bottom:3px solid transparent;margin-bottom:-1px}
+.abas a.on{border-color:var(--azul)}
+.campo-sel{height:30px;border:1px solid #8f959e;border-radius:6px;padding:0 10px;display:flex;align-items:center;justify-content:space-between;font-size:14px;color:#495057;margin-bottom:22px}
+.busca{display:flex;margin-bottom:36px}
+.busca span{width:162px;height:30px;border:1px solid #8f959e;border-right:0;border-radius:6px 0 0 6px;padding:5px 10px;font-size:12px;color:#8f959e}
+.busca b{width:28px;height:30px;background:#0f6cbf;border-radius:0 6px 6px 0;display:grid;place-items:center;color:#fff;font-size:14px}
+.cat-lista{font-size:14px}
+.cat-lista .item{display:inline-flex;align-items:center;gap:10px;margin:40px 0 0 18px;padding:4px 6px;border-radius:4px;font-size:14px;color:var(--tinta)}
+.cat-lista .item.hover{background:#eef3fa;color:var(--azul)}
+
+/* ---------- curso Acesso ao GABINETE ---------- */
+.gaveta{position:fixed;left:-2px;top:72px;width:36px;height:36px;border-radius:0 18px 18px 0;background:#e9ecef;display:grid;place-items:center;font-size:16px;color:#343a40;z-index:5}
+.secoes{display:flex;gap:2px;border-bottom:1px solid var(--linha);margin:-4px 0 26px}
+.secoes a{padding:9px 14px;font-size:14px;border:1px solid transparent;border-bottom:0;border-radius:6px 6px 0 0;margin-bottom:-1px}
+.secoes a.on{border-color:var(--linha);background:#fff;color:#6c757d}
+.sec-titulo{background:var(--fundo-sec);border-radius:4px;padding:12px 20px;display:flex;align-items:center;gap:10px;margin-bottom:28px}
+.sec-titulo h2{margin:0;font-size:22px;font-weight:700}
+.sec-titulo i{font-size:16px}
+.banner{height:420px;border-radius:2px;overflow:hidden;position:relative;background:linear-gradient(115deg,#fff 0 52%,#eef3f8 52%);border:1px solid #e6e9ee;margin:0 6px}
+.banner .selo{position:absolute;left:34px;top:26px;display:flex;align-items:center;gap:18px}
+.banner .selo .ic{width:84px;height:84px;border-radius:16px;border:3px solid #2f9a55;display:grid;place-items:center;font-size:52px;color:var(--marinho)}
+.banner .selo h3{margin:0;font-size:46px;font-weight:900;color:var(--marinho);letter-spacing:.5px;line-height:1}
+.banner .selo small{display:inline-block;margin-top:8px;background:var(--marinho);color:#fff;font-weight:700;letter-spacing:3px;padding:6px 20px;border-radius:0 20px 20px 0;font-size:17px}
+.banner .lista{position:absolute;left:52px;top:160px;width:420px;display:grid;gap:22px}
+.banner .lista div{display:flex;gap:16px;align-items:flex-start}
+.banner .lista i{flex:none;width:48px;height:48px;border-radius:50%;display:grid;place-items:center;color:#fff;background:var(--marinho);font-size:24px}
+.banner .lista div:nth-child(2) i{background:#2f9a55}
+.banner .lista b{display:block;color:var(--marinho);font-size:15px}
+.banner .lista span{font-size:13px;color:#444}
+.banner .icones{position:absolute;right:40px;top:34px;display:flex;gap:26px}
+.banner .icones div{width:96px;text-align:center;font-size:10.5px;font-weight:700;color:#222;line-height:1.2}
+.banner .icones i{width:60px;height:60px;border-radius:50%;display:grid;place-items:center;margin:0 auto 6px;color:#fff;background:var(--marinho);font-size:28px;box-shadow:0 0 0 3px #fff,0 0 0 4px #2f9a55}
+.banner .icones div:nth-child(2) i{background:#2f9a55}
+.banner .tablet{position:absolute;right:70px;bottom:-30px;width:390px;height:240px;border-radius:16px;background:#1d2733;padding:14px}
+.banner .tablet div{background:#fff;border-radius:6px;height:100%;padding:14px 18px;display:grid;gap:8px;align-content:start}
+.banner .tablet span{display:flex;justify-content:space-between;border:1px solid #dfe4ea;border-radius:5px;padding:6px 10px;font-size:12px;font-weight:600;color:#26313d;box-shadow:0 2px 4px rgba(0,0,0,.06)}
+
+/* ---------- aplicação embutida (Apps Script) ---------- */
+.atividade{border:1px solid var(--linha);border-radius:8px;background:#f8f9fa;padding:20px}
+.app{background:var(--creme);min-height:720px;position:relative;overflow:hidden}
+.app-topo{height:156px;background:linear-gradient(100deg,#03174a,#0a3a8c);border-bottom:3px solid var(--dourado);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff}
+.app-topo .marca{display:flex;flex-direction:column;align-items:center;margin-bottom:12px}
+.app-topo img{height:46px;filter:brightness(0) invert(1)}
+.app-topo .marca .txt{display:none;font:italic 900 34px/1 Arial,sans-serif}
+.app-topo .marca.sem-img img{display:none}.app-topo .marca.sem-img .txt{display:block}
+.app-topo h2{margin:0;font-size:21px;font-weight:700}
+.passo{display:none;padding:28px 0 40px}
+.passo.on{display:block;animation:entra .4s ease-out}
+.capa{text-align:center;padding-top:70px}
+.capa h3{margin:0 0 10px;font-size:21px}
+.capa p{margin:0 auto;width:360px;color:#5b6470;font-size:13.5px}
+.capa .edital{margin:28px 0;font-size:11.5px;font-weight:700;color:var(--marinho);letter-spacing:.2px}
+.btn{border:0;border-radius:6px;background:var(--marinho);color:#fff;font-weight:700;font-size:13.5px;padding:0 20px;height:36px;transition:background .2s,opacity .2s}
+.btn:disabled{background:#a9b6cf;cursor:default}
+.btn.sec{background:#fff;color:#334;border:1px solid #cfd5de}
+.btn.largo{width:228px}
+.prog{width:424px;margin:26px auto 0;display:flex;align-items:center;gap:10px;font-size:11px;color:#5b6470}
+.prog .trilho{flex:1;height:2px;background:#d8dbe0;position:relative}
+.prog .trilho b{position:absolute;left:0;top:-1px;height:4px;width:25%;background:var(--marinho);border-radius:2px;transition:width .6s ease}
+.ficha{width:424px;margin:0 auto;background:#fff;border:1px solid #e1e3e6;border-radius:10px;padding:22px 20px 20px}
+.ficha h4{margin:0 0 3px;font-size:16px}
+.ficha .sub{margin:0 0 16px;font-size:12px;color:#5b6470}
+.termo{height:228px;overflow:auto;border:1px solid #dcdfe4;border-radius:4px;background:#f6f6f4;padding:12px 16px;font-size:12px;line-height:1.55;text-align:justify}
+.termo p{margin:0 0 11px}
+.termo a{color:var(--azul);text-decoration:underline}
+.aceite{display:flex;gap:10px;align-items:flex-start;margin:16px 0;font-size:12px;color:#333}
+.aceite input{width:16px;height:16px;margin:1px 0 0;accent-color:var(--marinho)}
+.acoes{display:flex;gap:10px}
+.acoes .btn:last-child{flex:1}
+.f{margin-bottom:12px}
+.f label{display:block;font-size:11.5px;font-weight:600;color:#333;margin-bottom:4px}
+.f label em{font-style:normal;font-weight:500;color:#9a7b1f;margin-left:6px}
+.f input,.f select{width:100%;height:34px;border:1px solid #cfd4db;border-radius:5px;padding:0 10px;font:inherit;font-size:13px;color:var(--tinta);background:#fff}
+.f input[readonly]{background:#f3f4f6;color:#444}
+.lin{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.solta{border:1.5px dashed #b9c2cf;border-radius:8px;padding:16px;text-align:center;font-size:12px;color:#5b6470;background:#fafbfc;transition:background .3s,border-color .3s}
+.solta i{font-size:26px;color:#8b97a8;display:block;margin-bottom:4px}
+.solta.ok{border-style:solid;border-color:#9fd0b1;background:var(--ok-soft);text-align:left;display:flex;align-items:center;gap:10px;color:#1d4d32}
+.solta.ok i{font-size:28px;color:#c0392b;margin:0}
+.solta.ok b{display:block;font-size:12.5px;color:var(--tinta)}
+.resumo{font-size:12.5px;border:1px solid #e3e6ea;border-radius:6px;margin-bottom:16px}
+.resumo div{display:flex;justify-content:space-between;gap:12px;padding:7px 12px;border-bottom:1px solid #eef0f2}
+.resumo div:last-child{border:0}
+.resumo span{color:#5b6470}
+.resumo b{font-weight:600;text-align:right}
+.girar{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.45);border-top-color:#fff;border-radius:50%;animation:gira .8s linear infinite;vertical-align:-2px;margin-right:8px}
+@keyframes gira{to{transform:rotate(360deg)}}
+.sucesso{text-align:center}
+.sucesso .sel{width:64px;height:64px;border-radius:50%;background:var(--ok-soft);color:var(--ok);display:grid;place-items:center;font-size:38px;margin:4px auto 12px;animation:pula .6s cubic-bezier(.3,1.6,.5,1)}
+@keyframes pula{from{transform:scale(.3);opacity:0}to{transform:none;opacity:1}}
+.sucesso h4{font-size:18px}
+.protocolo{margin:14px 0;padding:12px;border-radius:8px;background:#f2f5fa;border:1px solid #dbe3ef}
+.protocolo small{display:block;font-size:11px;color:#5b6470;text-transform:uppercase;letter-spacing:.8px}
+.protocolo b{font:700 20px/1.3 "SFMono-Regular",Consolas,monospace;color:var(--marinho);letter-spacing:1px}
+.sucesso p{font-size:12px;color:#5b6470;margin:4px 0}
+
+/* documento que "voa" até o campo de envio */
+.voando{position:fixed;z-index:50;width:170px;height:220px;background:#fff;border-radius:6px;box-shadow:0 18px 40px rgba(0,0,0,.28);padding:16px 14px;transition:all .9s cubic-bezier(.5,0,.2,1)}
+.voando .pdf{position:absolute;right:10px;top:10px;background:#c0392b;color:#fff;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px}
+.voando h5{margin:18px 0 10px;font-size:11px;color:var(--marinho)}
+.voando i{display:block;height:6px;border-radius:3px;background:#e4e7ec;margin:7px 0}
+.voando i:nth-child(odd){width:80%}
+
+/* bastidores: o que a inscrição gera no Gabinete */
+.bastidor{position:fixed;right:28px;top:86px;width:470px;z-index:40;background:#fff;border-radius:12px;box-shadow:0 22px 60px rgba(4,20,52,.35);overflow:hidden;transform:translateX(540px);transition:transform .8s cubic-bezier(.2,.8,.2,1)}
+.bastidor.on{transform:none}
+.bastidor header{background:var(--marinho);color:#fff;padding:12px 16px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px}
+.bastidor header small{margin-left:auto;font-weight:500;opacity:.75}
+.bastidor .bloco{padding:12px 16px;border-bottom:1px solid #eef0f2}
+.bastidor .bloco:last-child{border:0}
+.bastidor h6{margin:0 0 8px;font-size:11px;text-transform:uppercase;letter-spacing:.8px;color:#5b6470;display:flex;align-items:center;gap:6px}
+.bastidor h6 i{font-size:15px}
+.planilha{width:100%;border-collapse:collapse;font-size:11px}
+.planilha th{background:#f1f3f4;color:#5f6368;font-weight:600;text-align:left;padding:5px 6px;border:1px solid #e0e3e7}
+.planilha td{padding:5px 6px;border:1px solid #e0e3e7;white-space:nowrap}
+.planilha tr.nova td{background:#fff;animation:destaca 2.4s ease-out .3s both}
+@keyframes destaca{0%{background:#fde9a8}100%{background:#fff8de}}
+.pasta{display:grid;gap:6px;font-size:12px}
+.pasta div{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;background:#f7f8fa;opacity:0;transform:translateY(6px);transition:all .4s}
+.pasta div.on{opacity:1;transform:none}
+.pasta div i{font-size:17px}
+.pasta .r{color:#c0392b}.pasta .a{color:#e2a400}.pasta .g{color:var(--ok)}
+.chip{display:inline-block;padding:1px 8px;border-radius:10px;font-size:10px;font-weight:700;background:var(--gold-soft);color:#8a6a10}
+
+
+.aviso{background:#f5eedb;border-radius:6px;padding:12px 14px;font-size:12.5px;color:#4a3d16;margin-bottom:16px}
+.modal{position:fixed;inset:0;z-index:45;background:rgba(10,18,32,.55);display:grid;place-items:center;opacity:0;pointer-events:none;transition:opacity .4s}
+.modal.on{opacity:1}
+.folha{width:560px;height:790px;background:#fff;box-shadow:0 20px 60px rgba(0,0,0,.4);padding:34px 44px;font:11px/1.45 Arial,Helvetica,sans-serif;color:#111;transform:scale(.92);transition:transform .7s cubic-bezier(.5,0,.2,1),opacity .7s;overflow:hidden}
+.modal.on .folha{transform:none}
+.folha.saindo{transform:translate(520px,420px) scale(.08)!important;opacity:0}
+.folha .cab{display:flex;align-items:center;gap:14px;border-bottom:1px solid #ddd;padding-bottom:16px;margin-bottom:22px}
+.folha .cab img{height:30px}.folha .cab div{flex:1;text-align:center}.folha .cab b{display:block;font-size:10.5px}
+.folha .ms{font-size:9px;color:#1b5e9e;font-style:italic;font-weight:700}
+.folha h5{text-align:center;font-size:11.5px;margin:0 0 14px}
+.folha h6{text-align:center;font-size:13px;margin:0 0 16px;text-decoration:underline}
+.folha .dados div{margin-bottom:5px}
+.folha p{text-align:justify;margin:12px 0}
+.folha .local{text-align:right;margin-top:22px}
+.folha .assin{margin:46px auto 0;width:240px;text-align:center;border-top:1px solid #bbb;padding-top:4px;position:relative}
+.selo-gov{position:absolute;left:10px;bottom:28px;width:220px;text-align:left;font-size:8.5px;line-height:1.35;border:1px solid #1351b4;border-left:5px solid #1351b4;border-radius:3px;padding:5px 8px;color:#1351b4;background:#f3f7fd;opacity:0;transform:scale(1.4);transition:all .5s cubic-bezier(.3,1.5,.5,1)}
+.selo-gov.on{opacity:1;transform:none}.selo-gov b{display:block;font-size:9.5px}
+.janela-gov{position:fixed;left:50%;top:50%;z-index:55;width:520px;margin:-150px 0 0 -260px;background:#fff;border-radius:10px;box-shadow:0 24px 70px rgba(0,0,0,.45);overflow:hidden;opacity:0;transform:translateY(30px);pointer-events:none;transition:all .45s}
+.janela-gov.on{opacity:1;transform:none;pointer-events:auto}
+.barra-gov{height:34px;background:#e8ebf0;display:flex;align-items:center;gap:6px;padding:0 12px}
+.barra-gov i{width:10px;height:10px;border-radius:50%;background:#c3c9d2}
+.barra-gov span{margin-left:10px;background:#fff;border-radius:12px;padding:2px 12px;font-size:12px;color:#444}
+.corpo-gov{padding:22px 26px 26px}
+.corpo-gov h5{margin:0 0 14px;font-size:17px;color:#1351b4}
+.arq-gov{display:flex;align-items:center;gap:10px;border:1px solid #d6dbe3;border-radius:6px;padding:10px 12px;margin-bottom:16px;font-size:13px}
+.arq-gov i{color:#c0392b;font-size:24px}
+#assinar-gov{background:#1351b4;border-radius:20px;padding:0 24px}
+.ok-gov{color:var(--ok);font-size:13px;display:flex;align-items:center;gap:6px}
+.ok-gov i{font-size:20px}
+.baixados{position:fixed;right:24px;bottom:22px;z-index:58;display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #d6dbe3;border-radius:8px;padding:10px 14px;font-size:13px;box-shadow:0 8px 24px rgba(0,0,0,.18);opacity:0;transform:translateY(12px);transition:all .4s}
+.baixados.on{opacity:1;transform:none}
+.baixados i{color:var(--azul);font-size:18px}
+.pasta div.novo.on{animation:destaca 2.4s ease-out both}
+.pasta .chip{margin-left:auto}
+/* legenda dos capítulos e repetição (motion avulso) */
+.legenda{position:fixed;left:24px;bottom:22px;z-index:60;width:430px;display:flex;gap:12px;align-items:flex-start;background:rgba(2,36,100,.95);color:#fff;padding:14px 18px 15px 14px;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.3);opacity:0;transform:translateY(10px);transition:opacity .4s,transform .4s}
+.legenda.on{opacity:1;transform:none}
+.legenda b{flex:none;background:var(--dourado);color:var(--marinho);border-radius:999px;padding:3px 10px;font-size:12px;margin-top:2px}
+.legenda strong{display:block;font-size:15px;margin-bottom:3px}
+.legenda span{display:block;font-size:13px;line-height:1.45;opacity:.92}
+.legenda.troca{animation:troca .5s ease-out}
+@keyframes troca{from{opacity:.2;transform:translateY(6px)}to{opacity:1;transform:none}}
+.fim{position:fixed;inset:0;z-index:70;display:none;place-items:center;background:rgba(7,13,24,.55)}
+.fim.on{display:grid}
+.fim .caixa{background:#fff;border-radius:16px;padding:30px 36px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.35);max-width:520px}
+.fim h3{margin:0 0 8px;font-size:20px;color:var(--marinho)}
+.fim p{margin:0 0 20px;font-size:15px;color:#3c4248}
+.fim a{color:var(--azul);font-weight:700;text-decoration:underline}
+.fim button{border:0;border-radius:999px;background:var(--marinho);color:#fff;font-weight:700;font-size:16px;padding:14px 26px;box-shadow:0 10px 30px rgba(0,0,0,.3)}
+</style>
+</head>
+<body>
+
+<!-- ============ 1. Página inicial proe.uems.br ============ -->
+<section class="tela on" id="tela-home">
+  <nav class="nav faixa">
+    <a class="logo"><img src="https://proe.uems.br/pluginfile.php/1/core_admin/logo/0x200/1781639591/logo-uems.png" alt="UEMS" onerror="this.parentNode.classList.add('sem-img')"><span class="txt">UEMS</span></a>
+    <div class="menu"><a>PROE<i class="ph ph-caret-down"></i></a><a>Espaços Virtuais<i class="ph ph-caret-down"></i></a></div>
+    <div class="dir"><i class="ph ph-magnifying-glass"></i><span class="avatar">MA</span><i class="ph ph-caret-down" style="font-size:11px;margin-left:-10px"></i></div>
+  </nav>
+  <div class="hero"></div>
+  <div class="titulo-sec"><h2>PROE<b></b>DIVISÕES</h2></div>
+  <div class="cards">
+    <a class="card"><h3><i class="ph-fill ph-bank"></i>DARPP</h3><p>Divisão de Avaliação, Reconhecimento, Projetos Pedagógicos</p></a>
+    <a class="card"><h3><i class="ph-fill ph-file-text"></i>DEPPE</h3><p>Divisão de Estágios, Programas e Projetos de Ensino</p></a>
+    <a class="card" id="card-gab"><h3><i class="ph-fill ph-student"></i>GABINETE</h3><p style="margin-top:28px">Gabinete</p></a>
+    <a class="card"><h3><i class="ph-bold ph-person-simple-walk"></i>DIND</h3><p>Divisão de Ingresso Discente</p></a>
+    <a class="card"><h3><i class="ph-fill ph-identification-card"></i>ENADE</h3><p>Divisão de Gestão do ENADE e Indicadores da Educação Superior</p></a>
+    <a class="card"><h3><i class="ph-fill ph-chalkboard-teacher"></i>PIBID</h3><p>Programa Institucional de Bolsa de Iniciação à Docência</p></a>
+  </div>
+</section>
+
+<!-- ============ 2. Categoria Gabinete ============ -->
+<section class="tela" id="tela-cat">
+  <nav class="nav">
+    <a class="logo"><img src="https://proe.uems.br/pluginfile.php/1/core_admin/logo/0x200/1781639591/logo-uems.png" alt="UEMS" onerror="this.parentNode.classList.add('sem-img')"><span class="txt">UEMS</span></a>
+    <div class="menu"><a class="ativo">Início</a><a>Painel</a><a>Meus Espaços Virtuais</a></div>
+    <div class="dir"><i class="ph ph-magnifying-glass"></i><span class="sep"></span><i class="ph-fill ph-bell"></i><i class="ph-fill ph-chat-circle"></i><span class="avatar">MA</span></div>
+  </nav>
+  <div class="miolo">
+    <div class="migalha"><a>Painel</a><span class="s">/</span><a>Cursos</a><span class="s">/</span><a>Gabinete</a></div>
+    <h1>Gabinete</h1>
+    <div class="abas"><a class="on">Categoria</a><a>Mais <i class="ph ph-caret-down" style="font-size:11px"></i></a></div>
+    <div class="campo-sel">Gabinete <i class="ph ph-caret-up-down"></i></div>
+    <div class="busca"><span>Buscar cursos</span><b><i class="ph-bold ph-magnifying-glass"></i></b></div>
+    <div class="cat-lista">Gabinete<br><a class="item" id="link-acesso"><i class="ph-bold ph-caret-right" style="color:#555"></i>Acesso ao GABINETE</a></div>
+  </div>
+</section>
+
+<!-- ============ 3. Curso Acesso ao GABINETE ============ -->
+<section class="tela" id="tela-curso">
+  <nav class="nav">
+    <a class="logo"><img src="https://proe.uems.br/pluginfile.php/1/core_admin/logo/0x200/1781639591/logo-uems.png" alt="UEMS" onerror="this.parentNode.classList.add('sem-img')"><span class="txt">UEMS</span></a>
+    <div class="menu"><a>Início</a><a>Painel</a><a>Meus Espaços Virtuais</a></div>
+    <div class="dir"><i class="ph ph-magnifying-glass"></i><span class="sep"></span><i class="ph-fill ph-bell"></i><i class="ph-fill ph-chat-circle"></i><span class="avatar">MA</span></div>
+  </nav>
+  <span class="gaveta"><i class="ph-bold ph-list-bullets"></i></span>
+  <div class="miolo">
+    <div class="migalha"><a>Painel</a><span class="s">/</span><a>Meus Espaços Virtuais</a><span class="s">/</span><a>Gabinete</a><span class="s">/</span><span class="ult" id="mig-ult">Apresentação</span></div>
+    <h1>Acesso ao GABINETE</h1>
+    <div class="abas"><a class="on">Curso</a><a>Participantes</a><a>Notas</a></div>
+    <div class="secoes">
+      <a class="on" data-sec="apres">Apresentação</a><a>Cordenação dos Cursos</a><a>Cursos conveniados</a><a id="tab-eleicao" data-sec="eleicao">Eleição de Coordenadores</a>
+    </div>
+
+    <div id="sec-apres">
+      <div class="sec-titulo"><i class="ph ph-folder"></i><h2>Apresentação</h2></div>
+      <div class="banner">
+        <div class="selo"><span class="ic"><i class="ph-fill ph-bank"></i></span><div><h3>GABINETE PROE</h3><small>AMBIENTE INSTITUCIONAL</small></div></div>
+        <div class="lista">
+          <div><i class="ph-fill ph-file-text"></i><p style="margin:0"><b>EXPEDIENTES E PROCESSOS</b><span>Numeração de ofícios e C.I.s, registros, encaminhamentos e acompanhamento das demandas da PROE.</span></p></div>
+          <div><i class="ph-fill ph-suitcase-simple"></i><p style="margin:0"><b>LOGÍSTICA INSTITUCIONAL</b><span>Pedidos de diárias, passagens, deslocamentos, transporte e apoio às atividades da PROE.</span></p></div>
+          <div><i class="ph-fill ph-users-three"></i><p style="margin:0"><b>CURSOS E COORDENAÇÕES</b><span>Eleições de coordenadores e acompanhamento das coordenações de curso.</span></p></div>
+        </div>
+        <div class="icones">
+          <div><i class="ph-fill ph-file-text"></i>OFÍCIOS E C.I.s</div>
+          <div><i class="ph-fill ph-airplane-tilt"></i>DIÁRIAS E TRANSPORTE</div>
+          <div><i class="ph-fill ph-users-three"></i>ELEIÇÕES DE COORDENADORES</div>
+        </div>
+        <div class="tablet"><div><span>Expedientes e Processos <i class="ph ph-caret-right"></i></span><span>Logística Institucional <i class="ph ph-caret-right"></i></span><span>Cursos e Coordenações <i class="ph ph-caret-right"></i></span><span>Articulação Estratégica <i class="ph ph-caret-right"></i></span></div></div>
+      </div>
+    </div>
+
+    <div id="sec-eleicao" hidden>
+      <div class="sec-titulo"><i class="ph ph-folder"></i><h2>Eleição de Coordenadores</h2></div>
+      <div class="atividade">
+        <div class="app" id="app">
+          <div class="app-topo">
+            <div class="marca"><img src="https://proe.uems.br/pluginfile.php/1/core_admin/logocompact/300x300/1781639591/Ativo%202.png" alt="UEMS" onerror="this.parentNode.classList.add('sem-img')"><span class="txt">UEMS</span></div>
+            <h2>Eleição de Coordenadores de Curso</h2>
+          </div>
+
+          <!-- capa -->
+          <div class="passo on" id="p0">
+            <div class="capa">
+              <h3>Inscrição para Coordenação de Curso</h3>
+              <p>Concorra ao processo eleitoral para Coordenador(a) de Curso conforme o Edital vigente da PROE/UEMS.</p>
+              <div class="edital">EDITAL N.º 49/2026 PROE/UEMS</div>
+              <button class="btn largo" id="candidatar">Candidatar-se</button>
+            </div>
+          </div>
+
+          <!-- etapas -->
+          <div class="prog" id="prog" hidden><div class="trilho"><b id="barra"></b></div><span id="etapa">Etapa 1 de 4</span></div>
+
+          <div class="passo" id="p1">
+            <div class="ficha">
+              <h4>Termo de Compromisso</h4>
+              <p class="sub">Leia atentamente antes de prosseguir com a inscrição.</p>
+              <div class="termo" id="termo">
+                <p>Protocolo, por meio deste instrumento, a minha inscrição para concorrer ao processo eleitoral para Coordenadores de Curso regido pelo EDITAL N.º 49/2026 PROE/UEMS.</p>
+                <p>Declaro ter ciência das condições estabelecidas no EDITAL N.º 49/2026 PROE/UEMS, que todos os formulários enviados são verdadeiros e que, se eleito(a), me comprometo a:</p>
+                <p>a) ter disponibilidade de 20 horas semanais para me dedicar às múltiplas atividades de coordenação e para cumprir pelo menos metade desse período no turno de funcionamento do curso;</p>
+                <p>b) participar integralmente em atividades e cursos de formação continuada programados pela PROE que envolvam a gestão de pessoas, processos, recursos pedagógicos e conhecimentos específicos sobre o funcionamento institucional e jurídico da UEMS;</p>
+                <p>c) estar sempre ciente das normas estabelecidas na Resolução COUNI-UEMS n.º 215, de 18 de setembro de 2002, disponível em: <a>https://www.uems.br/legislacoes/detalhes/resolucao-couni-215</a>.</p>
+              </div>
+              <label class="aceite"><input type="checkbox" id="aceite"><span>Li e concordo com os termos acima e com as condições do Edital N.º 49/2026 PROE/UEMS.</span></label>
+              <div class="acoes"><button class="btn sec">Voltar</button><button class="btn" id="seguir1" disabled>Continuar</button></div>
+            </div>
+          </div>
+
+          <div class="passo" id="p2">
+            <div class="ficha">
+              <h4>Dados do Candidato</h4>
+              <p class="sub">Preencha as informações abaixo para gerar o requerimento.</p>
+              <div class="f"><label>Nome completo</label><input id="nome" placeholder="Nome do candidato"></div>
+              <div class="f"><label>Matrícula</label><input id="matricula" placeholder="Ex: 000000000"></div>
+              <div class="lin">
+                <div class="f"><label>RG</label><input id="rg" placeholder="0000000000"></div>
+                <div class="f"><label>Órgão Expedidor</label><input id="orgao" value="SSP/MS"></div>
+              </div>
+              <div class="lin">
+                <div class="f"><label>CPF</label><input id="cpf" placeholder="000.000.000-00"></div>
+                <div class="f"><label>Data de Nascimento</label><input id="nasc" placeholder="dd/mm/aaaa"></div>
+              </div>
+              <div class="f"><label>Curso em que pretende ser Coordenador(a)</label><input id="curso" placeholder="Ex: Ciências da Computação"></div>
+              <div class="f"><label>Unidade Universitária</label><input id="unidade" placeholder="Ex: Dourados"></div>
+              <div class="f"><label>Código e-MEC</label><input id="emec" placeholder="Ex: 123456"></div>
+              <div class="f"><label>Cidade de Lotação</label><input id="lotacao" placeholder="Ex: Dourados"></div>
+              <div class="acoes"><button class="btn sec">Voltar</button><button class="btn" id="seguir2">Continuar</button></div>
+            </div>
+          </div>
+
+          <div class="passo" id="p3">
+            <div class="ficha">
+              <h4>Requerimento de Inscrição</h4>
+              <p class="sub">Gere o requerimento em PDF com os dados preenchidos.</p>
+              <button class="btn" id="gerar" style="width:100%">Gerar Requerimento (PDF)</button>
+            </div>
+            <div class="ficha" style="margin-top:18px">
+              <h4 style="margin-bottom:12px">Assinatura Gov.br</h4>
+              <div class="aviso">Assine o PDF baixado no <b>Portal Gov.br</b> (assinador.iti.br) e depois anexe o arquivo assinado na próxima etapa.</div>
+              <div class="acoes"><button class="btn sec">Voltar</button><button class="btn" id="seguir3">Já assinei, continuar</button></div>
+            </div>
+          </div>
+
+          <div class="passo" id="p4">
+            <div class="ficha">
+              <h4>Envio do Requerimento Assinado</h4>
+              <p class="sub">Anexe o PDF assinado pelo Gov.br.</p>
+              <div class="f"><label>Requerimento assinado (PDF)</label>
+                <div class="solta" id="solta"><i class="ph ph-upload-simple"></i>Arraste o arquivo aqui ou <b style="color:var(--azul)">selecione</b></div></div>
+              <div class="acoes"><button class="btn sec">Voltar</button><button class="btn" id="enviar" disabled>Enviar inscrição</button></div>
+            </div>
+          </div>
+
+          <div class="passo" id="p5">
+            <div class="ficha sucesso">
+              <div class="sel"><i class="ph-bold ph-check"></i></div>
+              <h4 style="margin:0 0 8px">Inscrição enviada</h4>
+              <p>O requerimento assinado foi encaminhado ao Gabinete da PROE.</p>
+              <p>A homologação das inscrições será publicada conforme o cronograma do Edital N.º 49/2026 PROE/UEMS.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- bastidores: Planilha e pasta no Drive do Gabinete -->
+<!-- ficha de inscrição gerada (PDF) -->
+<div class="modal" id="modal-pdf">
+  <div class="folha" id="folha">
+    <div class="cab"><img src="https://proe.uems.br/pluginfile.php/1/core_admin/logo/0x200/1781639591/logo-uems.png" alt="UEMS" onerror="this.style.display='none'"><div><b>UNIVERSIDADE ESTADUAL DE MATO GROSSO DO SUL</b><b>PRÓ-REITORIA DE ENSINO - PROE</b></div><span class="ms">Estado de<br>Mato Grosso do Sul</span></div>
+    <h5>ELEIÇÃO PARA COORDENADOR(A) DE CURSO DE GRADUAÇÃO DA<br>UNIVERSIDADE ESTADUAL DE MATO GROSSO DO SUL 2026</h5>
+    <h6>FICHA DE INSCRIÇÃO</h6>
+    <div class="dados" id="ficha-dados"></div>
+    <p>Protocolo, por meio deste instrumento, a minha inscrição para concorrer ao processo eleitoral para Coordenadores de Curso regido pelo EDITAL N.º 49/2026 PROE/UEMS.</p>
+    <p>Declaro ter ciência das condições estabelecidas no EDITAL N.º 49/2026 PROE/UEMS, que todos os formulários enviados são verdadeiros e que, se eleito(a), me comprometo a: a) ter disponibilidade de 20 horas semanais…; b) participar integralmente em atividades e cursos de formação continuada…; c) estar sempre ciente das normas da Resolução COUNI-UEMS n.º 215/2002.</p>
+    <p class="local">Dourados, MS, 8 de outubro de 2026.</p>
+    <div class="assin"><div class="selo-gov" id="selo-gov"><b>Documento assinado digitalmente</b>MARCOS VINICIUS ARANTES<br>Data: 08/10/2026 10:42:17-0400<br>Verifique em https://validar.iti.gov.br</div><span>Assinatura do Candidato</span></div>
+  </div>
+</div>
+
+<!-- assinador Gov.br (representação) -->
+<div class="janela-gov" id="gov">
+  <div class="barra-gov"><i></i><i></i><i></i><span>assinador.iti.br</span></div>
+  <div class="corpo-gov">
+    <h5>Assinatura eletrônica de documentos</h5>
+    <div class="arq-gov" id="arq-gov"><i class="ph-fill ph-file-pdf"></i><span>ficha-inscricao.pdf</span></div>
+    <button class="btn" id="assinar-gov">Assinar digitalmente</button>
+    <div class="ok-gov" id="ok-gov" hidden><i class="ph-fill ph-seal-check"></i> Assinado. Arquivo salvo: <b>ficha-inscricao_assinado.pdf</b></div>
+  </div>
+</div>
+
+<!-- downloads do navegador -->
+<div class="baixados" id="baixados"><i class="ph-bold ph-download-simple"></i><span id="baixado-nome">ficha-inscricao.pdf</span></div>
+
+<!-- bastidores: Drive do Gabinete -->
+<aside class="bastidor" id="bastidor">
+  <header><i class="ph-fill ph-google-drive-logo"></i>Drive do Gabinete PROE<small>agora</small></header>
+  <div class="bloco">
+    <h6><i class="ph-fill ph-folder" style="color:#e2a400"></i>DRIVE Eleição / Inscrições 2026</h6>
+    <div class="pasta" id="pasta">
+      <div class="on"><i class="ph-fill ph-file-pdf r"></i>Ficha de Inscrição, Ana Paula Ribeiro (assinado).pdf</div>
+      <div class="on"><i class="ph-fill ph-file-pdf r"></i>Ficha de Inscrição, Carlos E. Nogueira (assinado).pdf</div>
+      <div class="novo"><i class="ph-fill ph-file-pdf r"></i><b>Ficha de Inscrição, Marcos Vinícius Arantes (assinado).pdf</b><span class="chip">Nova</span></div>
+    </div>
+  </div>
+</aside>
+
+<script>
+(function () {
+  var M = {}, pausado = false, iniciado = false, caps = 0;
+  var sleep = function (ms) { return new Promise(function (r) { setTimeout(r, ms); }); };
+  M.wait = async function (ms) {
+    var fim = Date.now() + ms;
+    while (Date.now() < fim || pausado) {
+      if (pausado) { fim += 100; await sleep(100); } else await sleep(Math.min(50, fim - Date.now()));
+    }
+  };
+  M.until = async function (fn, timeout) {
+    var limite = Date.now() + (timeout || 15000);
+    for (;;) {
+      var v; try { v = fn(); } catch (e) { v = null; }
+      if (v) return v;
+      if (Date.now() > limite) throw new Error('motion: tempo esgotado esperando elemento');
+      await M.wait(100);
+    }
+  };
+  M.$ = function (sel, texto, timeout) {
+    return M.until(function () {
+      return Array.prototype.find.call(document.querySelectorAll(sel), function (e) {
+        return e.getClientRects().length && (!texto || e.textContent.indexOf(texto) > -1);
+      });
+    }, timeout);
+  };
+  var cur, ripple, pos = [innerWidth * 0.6, innerHeight * 0.7];
+  function montarCursor() {
+    cur = document.createElement('div');
+    cur.innerHTML = '<svg width="26" height="26" viewBox="0 0 24 24"><path d="M4 2l15 9-6.5 1.6L9.6 19z" fill="#111" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg>';
+    cur.style.cssText = 'position:fixed;left:0;top:0;z-index:2147483647;pointer-events:none;filter:drop-shadow(0 2px 3px rgba(0,0,0,.35))';
+    ripple = document.createElement('div');
+    ripple.style.cssText = 'position:fixed;width:36px;height:36px;margin:-18px 0 0 -18px;border-radius:50%;background:rgba(200,168,75,.5);z-index:2147483646;pointer-events:none;opacity:0';
+    document.body.append(ripple, cur);
+    desenhar();
+  }
+  function desenhar() { cur.style.transform = 'translate(' + (pos[0] - 4) + 'px,' + (pos[1] - 2) + 'px)'; }
+  var ease = function (t) { return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; };
+  M.move = async function (x, y, ms) {
+    ms = ms || 700;
+    var x0 = pos[0], y0 = pos[1], t0 = performance.now();
+    for (;;) {
+      if (pausado) { await sleep(50); t0 += 50; continue; }
+      var t = Math.min(1, (performance.now() - t0) / ms), k = ease(t);
+      pos = [x0 + (x - x0) * k, y0 + (y - y0) * k]; desenhar();
+      if (t === 1) return;
+      await sleep(16);
+    }
+  };
+  M.mostrar = async function (el, opts) {
+    opts = opts || {};
+    if (opts.rolar !== false && !M.semRolar) { el.scrollIntoView({ block: opts.bloco || 'center', behavior: 'smooth' }); await M.wait(500); }
+    var r = el.getBoundingClientRect();
+    await M.move(r.left + r.width * (opts.fx || .5), r.top + r.height * (opts.fy || .5), opts.ms);
+  };
+  M.click = async function (el, opts) {
+    opts = opts || {};
+    if (typeof el === 'string') el = await M.$(el);
+    await M.mostrar(el, opts);
+    await M.wait(120);
+    ripple.style.transition = 'none'; ripple.style.left = pos[0] + 'px'; ripple.style.top = pos[1] + 'px';
+    ripple.style.opacity = '1'; ripple.style.transform = 'scale(.3)';
+    requestAnimationFrame(function () { ripple.style.transition = 'opacity .5s, transform .5s'; ripple.style.opacity = '0'; ripple.style.transform = 'scale(1.5)'; });
+    if (/^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName)) el.focus({ preventScroll: !!M.semRolar });
+    if (!opts.semEvento) el.click();
+    await M.wait(opts.pausa || 350);
+    return el;
+  };
+  M.type = async function (el, texto, opts) {
+    opts = opts || {};
+    if (typeof el === 'string') el = await M.$(el);
+    if (!opts.semClique) await M.click(el, { pausa: 150 });
+    var proto = el.tagName === 'TEXTAREA' ? HTMLTextAreaElement.prototype : HTMLInputElement.prototype;
+    var set = Object.getOwnPropertyDescriptor(proto, 'value').set;
+    var v = opts.limpar ? '' : el.value;
+    for (var i = 0; i < texto.length; i++) {
+      v += texto[i]; set.call(el, v);
+      el.dispatchEvent(new Event('input', { bubbles: true }));
+      await M.wait((opts.delay || 55) * (.6 + Math.random() * .8));
+    }
+    el.dispatchEvent(new Event('change', { bubbles: true }));
+    await M.wait(250);
+  };
+  M.select = async function (el, valor) {
+    if (typeof el === 'string') el = await M.$(el);
+    await M.click(el, { pausa: 200, semEvento: true });
+    var set = Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value').set;
+    set.call(el, valor); el.dispatchEvent(new Event('change', { bubbles: true }));
+    await M.wait(400);
+  };
+  M.scroll = async function (alvo, dy) {
+    (alvo || window).scrollBy({ top: dy, behavior: 'smooth' });
+    await M.wait(900);
+  };
+  M.cap = function (label) { top.postMessage({ motion: 'cap', i: caps++, label: label }, '*'); };
+  M.run = function (roteiro) {
+    var go = async function () {
+      if (iniciado) return; iniciado = true;
+      if (!M.semCursor) montarCursor();
+      try { await roteiro(M); } catch (e) { console.error(e); }
+      top.postMessage({ motion: 'end' }, '*');
+    };
+    addEventListener('message', function (e) {
+      var d = e.data || {};
+      if (d.motion === 'start') go();
+      if (d.motion === 'pause') pausado = true;
+      if (d.motion === 'resume') pausado = false;
+    });
+    var pronto = function () { top.postMessage({ motion: 'ready' }, '*'); if (window === top) go(); };
+    document.readyState === 'complete' ? pronto() : addEventListener('load', pronto);
+  };
+  window.Motion = M;
+})();
+</script>
+<div class="legenda" id="legenda"><b id="leg-n">1/6</b><div><strong id="leg-t"></strong><span id="leg-i"></span></div></div>
+<div class="fim" id="fim"><div class="caixa"><h3>Inscrição concluída</h3><p>Em caso de dúvidas, encaminhe um e-mail para <a href="mailto:proe@uems.br">proe@uems.br</a>.</p><button onclick="location.reload()"><i class="ph-bold ph-arrow-counter-clockwise"></i> Assistir novamente</button></div></div>
+<script>
+const $ = (s) => document.querySelector(s);
+const CAND = { nome: 'Marcos Vinícius Arantes', email: 'marcos.arantes@uems.br' };
+const CURSOS = { Dourados: ['Ciências Biológicas, Licenciatura', 'Direito', 'Letras, Licenciatura', 'Matemática, Licenciatura', 'Sistemas de Informação'] };
+
+function tela(id) {
+  document.querySelectorAll('.tela').forEach((t) => t.classList.toggle('on', t.id === 'tela-' + id));
+  scrollTo(0, 0);
+}
+function passo(n) {
+  document.querySelectorAll('.passo').forEach((p) => p.classList.toggle('on', p.id === 'p' + n));
+  $('#prog').hidden = !(n >= 1 && n <= 4);
+  if (n >= 1 && n <= 4) { $('#barra').style.width = (n * 25) + '%'; $('#etapa').textContent = 'Etapa ' + n + ' de 4'; }
+}
+function secao(id) {
+  document.querySelectorAll('.secoes a').forEach((a) => a.classList.toggle('on', a.dataset.sec === id));
+  $('#sec-apres').hidden = id !== 'apres'; $('#sec-eleicao').hidden = id !== 'eleicao';
+  $('#mig-ult').textContent = id === 'eleicao' ? 'Eleição de Coordenadores' : 'Apresentação';
+}
+$('#aceite').addEventListener('change', (e) => { $('#seguir1').disabled = !e.target.checked; });
+$('#unidade').addEventListener('change', (e) => {
+  const l = CURSOS[e.target.value] || [];
+  $('#curso').innerHTML = '<option value="">Selecione…</option>' + l.map((c) => `<option>${c}</option>`).join('');
+});
+const brilho = (el) => el.animate([{ backgroundColor: 'var(--gold-soft)' }, { backgroundColor: '#f3f4f6' }], { duration: 1800, easing: 'ease-out' });
+
+// ritmo geral do motion (1 = original; menor = mais rápido)
+const VEL = 0.7;
+const waitOrig = Motion.wait, moveOrig = Motion.move;
+Motion.wait = (ms) => waitOrig(ms * VEL);
+Motion.move = (x, y, ms) => moveOrig(x, y, (ms || 700) * VEL);
+let nCap = 0;
+const capOrig = Motion.cap;
+const INSTR = {
+  'Portal da PROE': 'Acesse proe.uems.br e clique no card GABINETE.',
+  'Acesso ao Gabinete': 'Entre em Acesso ao GABINETE, abra a aba Eleição de Coordenadores e clique em Candidatar-se.',
+  'Termo de compromisso': 'Leia o Termo de Compromisso, marque o aceite e clique em Continuar.',
+  'Dados do candidato': 'Preencha seus dados e os do curso que pretende coordenar. Depois, clique em Continuar.',
+  'Requerimento e assinatura Gov.br': 'Clique em Gerar Requerimento (PDF), assine o arquivo baixado no Portal Gov.br (assinador.iti.br) e clique em Já assinei, continuar.',
+  'Envio ao Gabinete': 'Anexe o PDF assinado e clique em Enviar inscrição. O requerimento segue para o Drive do Gabinete da PROE.',
+};
+Motion.cap = (t) => {
+  capOrig(t); nCap++;
+  $('#leg-n').textContent = nCap + '/6'; $('#leg-t').textContent = t; $('#leg-i').textContent = INSTR[t] || '';
+  const l = $('#legenda'); l.classList.add('on'); l.classList.remove('troca'); void l.offsetWidth; l.classList.add('troca');
+};
+Motion.run(async (M) => {
+  // 1. Portal da PROE
+  M.cap('Portal da PROE');
+  await M.wait(1500);
+  await M.scroll(null, 300);
+  const gab = $('#card-gab');
+  await M.mostrar(gab, { ms: 900, rolar: false });
+  gab.classList.add('hover');
+  await M.wait(700);
+  await M.click(gab, { rolar: false, pausa: 450 });
+
+  // 2. Gabinete > Acesso ao GABINETE > Eleição de Coordenadores
+  M.cap('Acesso ao Gabinete');
+  tela('cat');
+  await M.wait(1300);
+  const acesso = $('#link-acesso');
+  await M.mostrar(acesso, { rolar: false });
+  acesso.classList.add('hover');
+  await M.click(acesso, { rolar: false, pausa: 400 });
+  tela('curso');
+  await M.wait(1800);
+  await M.click('#tab-eleicao', { rolar: false, pausa: 200 });
+  secao('eleicao');
+  await M.wait(900);
+  await M.mostrar($('#candidatar'), { ms: 800 });
+  await M.wait(900);
+
+  // 3. Termo de compromisso
+  M.cap('Termo de compromisso');
+  await M.click('#candidatar', { rolar: false, pausa: 300 });
+  passo(1);
+  await M.wait(400);
+  $('#app').scrollIntoView({ block: 'start', behavior: 'smooth' });
+  await M.wait(1200);
+  await M.mostrar($('#termo'), { rolar: false, fy: .6 });
+  await M.wait(900);
+  await M.scroll($('#termo'), 150);
+  await M.wait(700);
+  await M.scroll($('#termo'), 200);
+  await M.wait(700);
+  await M.click('#aceite', { rolar: false, pausa: 600 });
+  await M.click('#seguir1', { rolar: false, pausa: 300 });
+
+  // 4. Dados do candidato
+  M.cap('Dados do candidato');
+  passo(2);
+  await M.wait(500);
+  const DADOS = [['#nome', CAND.nome], ['#matricula', '104582317'], ['#rg', '1234567'], ['#cpf', '123.456.789-09'],
+    ['#nasc', '14/05/1981'], ['#curso', 'Matemática - Licenciatura'], ['#unidade', 'Dourados'], ['#emec', '123456'], ['#lotacao', 'Dourados']];
+  for (const [sel, v] of DADOS) await M.type(sel, v, { delay: 32 });
+  await M.click('#seguir2', { pausa: 250 });
+
+  // 5. Requerimento em PDF e assinatura Gov.br
+  M.cap('Requerimento e assinatura Gov.br');
+  passo(3);
+  await M.wait(400);
+  $('#app').scrollIntoView({ block: 'start', behavior: 'smooth' });
+  await M.wait(700);
+  $('#ficha-dados').innerHTML = [
+    ['Nome do Candidato', CAND.nome], ['Matrícula', '104582317'], ['RG', '1234567', 'Órgão Expedidor', 'SSP/MS'],
+    ['CPF', '123.456.789-09', 'Data de Nascimento', '14/05/1981'], ['Cargo', 'Professor de Ensino Superior'],
+    ['Curso em que pretende ser Coordenador(a)', 'Matemática - Licenciatura'], ['Unidade Universitária', 'Dourados'],
+  ].map((l) => '<div>' + '<b>' + l[0] + ':</b> ' + l[1] + (l[2] ? '<b style="margin-left:22px">' + l[2] + ':</b> ' + l[3] : '') + '</div>').join('');
+  await M.click('#gerar', { pausa: 200 });
+  $('#gerar').innerHTML = '<span class="girar"></span>Gerando…';
+  await M.wait(900);
+  $('#gerar').textContent = 'Gerar Requerimento (PDF)';
+  $('#modal-pdf').classList.add('on');
+  await M.move(innerWidth * .8, innerHeight * .8, 500);
+  await M.wait(2600);
+  // o PDF vai para os downloads
+  $('#folha').classList.add('saindo');
+  await M.wait(700);
+  $('#modal-pdf').classList.remove('on'); $('#folha').classList.remove('saindo');
+  $('#baixados').classList.add('on');
+  await M.wait(900);
+  // assinatura no Gov.br
+  $('#gov').classList.add('on');
+  await M.wait(900);
+  await M.click('#assinar-gov', { rolar: false, pausa: 200 });
+  $('#assinar-gov').innerHTML = '<span class="girar"></span>Assinando…';
+  await M.wait(1300);
+  $('#assinar-gov').hidden = true; $('#ok-gov').hidden = false;
+  $('#arq-gov span').textContent = 'ficha-inscricao_assinado.pdf';
+  $('#selo-gov').classList.add('on');
+  $('#modal-pdf').classList.add('on');
+  await M.wait(2300);
+  $('#modal-pdf').classList.remove('on'); $('#gov').classList.remove('on');
+  $('#baixado-nome').textContent = 'ficha-inscricao_assinado.pdf';
+  await M.wait(600);
+  await M.click('#seguir3', { pausa: 250 });
+
+  // 6. Envio ao Gabinete
+  M.cap('Envio ao Gabinete');
+  passo(4);
+  await M.wait(500);
+  const solta = $('#solta');
+  await M.mostrar(solta, { ms: 600 });
+  const b = $('#baixados').getBoundingClientRect(), r = solta.getBoundingClientRect();
+  const doc = document.createElement('div');
+  doc.className = 'voando';
+  doc.innerHTML = '<span class="pdf">PDF</span><h5>FICHA DE INSCRIÇÃO<br>assinada Gov.br</h5><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>';
+  doc.style.left = (b.left) + 'px'; doc.style.top = (b.top - 200) + 'px'; doc.style.transform = 'scale(.35)'; doc.style.opacity = '0';
+  document.body.append(doc);
+  await M.wait(60);
+  doc.style.opacity = '1'; doc.style.transform = 'rotate(-3deg)'; doc.style.left = (innerWidth - 330) + 'px'; doc.style.top = '240px';
+  await M.wait(1100);
+  doc.style.left = (r.left + r.width / 2 - 85) + 'px'; doc.style.top = (r.top - 80) + 'px'; doc.style.transform = 'scale(.18)'; doc.style.opacity = '0';
+  await M.wait(900);
+  doc.remove(); $('#baixados').classList.remove('on');
+  solta.classList.add('ok');
+  solta.innerHTML = '<i class="ph-fill ph-file-pdf"></i><span><b>ficha-inscricao_assinado.pdf</b>Assinatura Gov.br identificada</span>';
+  $('#enviar').disabled = false;
+  await M.wait(700);
+  const env = await M.click('#enviar', { pausa: 200 });
+  env.disabled = true; env.innerHTML = '<span class="girar"></span>Enviando…';
+  await M.wait(1400);
+  passo(5);
+  await M.wait(400);
+  await M.mostrar($('#p5 .sel'), { ms: 700 });
+  await M.wait(900);
+  $('#bastidor').classList.add('on');
+  await M.wait(900);
+  $('#pasta .novo').classList.add('on');
+  await M.wait(4800);
+  $('#legenda').classList.remove('on');
+  $('#fim').classList.add('on');
+});
+</script>
+</body>
+</html>
