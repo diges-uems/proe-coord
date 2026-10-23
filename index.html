@@ -548,9 +548,16 @@ h1{margin:0 0 22px;font-size:32px;font-weight:700}
       await sleep(16);
     }
   };
+  // Rola só a janela desta página. scrollIntoView/focus rolariam também a
+  // página que embute o iframe (Moodle), fazendo ela "pular".
+  M.rolarAte = function (el, bloco) {
+    var r = el.getBoundingClientRect();
+    var alvo = bloco === 'start' ? r.top : r.top + r.height / 2 - innerHeight / 2;
+    scrollTo({ top: scrollY + alvo, behavior: 'smooth' });
+  };
   M.mostrar = async function (el, opts) {
     opts = opts || {};
-    if (opts.rolar !== false && !M.semRolar) { el.scrollIntoView({ block: opts.bloco || 'center', behavior: 'smooth' }); await M.wait(500); }
+    if (opts.rolar !== false && !M.semRolar) { M.rolarAte(el, opts.bloco || 'center'); await M.wait(500); }
     var r = el.getBoundingClientRect();
     await M.move(r.left + r.width * (opts.fx || .5), r.top + r.height * (opts.fy || .5), opts.ms);
   };
@@ -562,7 +569,7 @@ h1{margin:0 0 22px;font-size:32px;font-weight:700}
     ripple.style.transition = 'none'; ripple.style.left = pos[0] + 'px'; ripple.style.top = pos[1] + 'px';
     ripple.style.opacity = '1'; ripple.style.transform = 'scale(.3)';
     requestAnimationFrame(function () { ripple.style.transition = 'opacity .5s, transform .5s'; ripple.style.opacity = '0'; ripple.style.transform = 'scale(1.5)'; });
-    if (/^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName)) el.focus({ preventScroll: !!M.semRolar });
+    if (/^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName)) el.focus({ preventScroll: true });
     if (!opts.semEvento) el.click();
     await M.wait(opts.pausa || 350);
     return el;
@@ -729,7 +736,7 @@ Motion.run(async (M) => {
   await M.click('#candidatar', { rolar: false, pausa: 300 });
   passo(1);
   await M.wait(400);
-  $('#app').scrollIntoView({ block: 'start', behavior: 'smooth' });
+  M.rolarAte($('#app'), 'start');
   await M.wait(1200);
   await M.mostrar($('#termo'), { rolar: false, fy: .6 });
   await M.wait(900);
@@ -753,7 +760,7 @@ Motion.run(async (M) => {
   M.cap('Requerimento e assinatura Gov.br');
   passo(3);
   await M.wait(400);
-  $('#app').scrollIntoView({ block: 'start', behavior: 'smooth' });
+  M.rolarAte($('#app'), 'start');
   await M.wait(700);
   $('#ficha-dados').innerHTML = [
     ['Nome do Candidato', CAND.nome], ['Matrícula', '104582317'], ['RG', '1234567', 'Órgão Expedidor', 'SSP/MS'],
