@@ -36,6 +36,7 @@ button{font:inherit;cursor:pointer}
 .nav .dir{margin-left:auto;display:flex;align-items:center;gap:16px;color:#3c4248;font-size:18px}
 .avatar{width:32px;height:32px;border-radius:50%;background:#e9ecef;display:grid;place-items:center;font-size:12px;font-weight:600;color:#495057}
 .sep{width:1px;height:28px;background:var(--linha)}
+.entrar{font-size:14px;font-weight:600;color:var(--azul)}
 
 /* ---------- página inicial ---------- */
 .hero{height:330px;background:
@@ -68,6 +69,17 @@ h1{margin:0 0 22px;font-size:32px;font-weight:700}
 .cat-lista{font-size:14px}
 .cat-lista .item{display:inline-flex;align-items:center;gap:10px;margin:40px 0 0 18px;padding:4px 6px;border-radius:4px;font-size:14px;color:var(--tinta)}
 .cat-lista .item.hover{background:#eef3fa;color:var(--azul)}
+
+/* ---------- login do Moodle ---------- */
+.login-fundo{min-height:calc(100vh - 60px);display:grid;place-items:center;padding:40px 0;background:linear-gradient(rgba(0,47,107,.55),rgba(0,47,107,.7)),url("https://proe.uems.br/pluginfile.php/1/theme_almondb/sliderimage1/1781639591/uems.png") center/cover,linear-gradient(120deg,#0a4fa6,#0b3f86)}
+.login-card{width:400px;background:#fff;border-radius:10px;box-shadow:0 18px 50px rgba(0,0,0,.3);padding:34px 36px 30px}
+.login-card .logo{justify-content:center;height:auto;margin-bottom:22px}
+.login-card .logo img{height:46px}
+.login-card .logo .txt{font-size:34px}
+.login-aviso{background:#eef3fa;border-left:3px solid var(--azul);border-radius:4px;padding:9px 12px;font-size:12.5px;color:#22344f;margin-bottom:18px}
+.login-card .f input{height:40px;font-size:14px}
+.login-card .btn{width:100%;height:42px;font-size:15px;background:#0f6cbf;margin-top:6px}
+.login-card .perdeu{display:block;text-align:center;margin-top:14px;font-size:13px;color:#0f6cbf}
 
 /* ---------- curso Acesso ao GABINETE ---------- */
 .gaveta{position:fixed;left:-2px;top:72px;width:36px;height:36px;border-radius:0 18px 18px 0;background:#e9ecef;display:grid;place-items:center;font-size:16px;color:#343a40;z-index:5}
@@ -239,6 +251,18 @@ h1{margin:0 0 22px;font-size:32px;font-weight:700}
 .fim p{margin:0 0 20px;font-size:15px;color:#3c4248}
 .fim a{color:var(--azul);font-weight:700;text-decoration:underline}
 .fim button{border:0;border-radius:999px;background:var(--marinho);color:#fff;font-weight:700;font-size:16px;padding:14px 26px;box-shadow:0 10px 30px rgba(0,0,0,.3)}
+
+/* tela de abertura: o motion só começa ao clicar */
+.inicio{position:fixed;inset:0;z-index:80;display:grid;place-items:center;background:rgba(7,13,24,.62);backdrop-filter:blur(2px)}
+.inicio[hidden]{display:none!important}
+.inicio .caixa{background:#fff;border-radius:16px;padding:34px 40px 30px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.35);max-width:540px}
+.inicio .ic{width:64px;height:64px;border-radius:50%;margin:0 auto 14px;display:grid;place-items:center;background:var(--marinho);color:#fff;font-size:30px}
+.inicio h3{margin:0 0 8px;font-size:21px;color:var(--marinho)}
+.inicio p{margin:0 0 6px;font-size:14.5px;color:#3c4248;line-height:1.55}
+.inicio ol{text-align:left;margin:14px auto 22px;padding-left:22px;max-width:380px;font-size:13.5px;color:#3c4248;line-height:1.7}
+.inicio button{border:0;border-radius:999px;background:var(--marinho);color:#fff;font-weight:700;font-size:16px;padding:14px 30px;box-shadow:0 10px 30px rgba(0,0,0,.3);display:inline-flex;align-items:center;gap:10px;transition:transform .2s,background .2s}
+.inicio button:hover{background:var(--azul);transform:translateY(-2px)}
+.inicio button i{font-size:20px}
 </style>
 </head>
 <body>
@@ -248,7 +272,7 @@ h1{margin:0 0 22px;font-size:32px;font-weight:700}
   <nav class="nav faixa">
     <a class="logo"><img src="https://proe.uems.br/pluginfile.php/1/core_admin/logo/0x200/1781639591/logo-uems.png" alt="UEMS" onerror="this.parentNode.classList.add('sem-img')"><span class="txt">UEMS</span></a>
     <div class="menu"><a>PROE<i class="ph ph-caret-down"></i></a><a>Espaços Virtuais<i class="ph ph-caret-down"></i></a></div>
-    <div class="dir"><i class="ph ph-magnifying-glass"></i><span class="avatar">MA</span><i class="ph ph-caret-down" style="font-size:11px;margin-left:-10px"></i></div>
+    <div class="dir"><i class="ph ph-magnifying-glass"></i><span class="entrar">Acessar</span></div>
   </nav>
   <div class="hero"></div>
   <div class="titulo-sec"><h2>PROE<b></b>DIVISÕES</h2></div>
@@ -267,7 +291,7 @@ h1{margin:0 0 22px;font-size:32px;font-weight:700}
   <nav class="nav">
     <a class="logo"><img src="https://proe.uems.br/pluginfile.php/1/core_admin/logo/0x200/1781639591/logo-uems.png" alt="UEMS" onerror="this.parentNode.classList.add('sem-img')"><span class="txt">UEMS</span></a>
     <div class="menu"><a class="ativo">Início</a><a>Painel</a><a>Meus Espaços Virtuais</a></div>
-    <div class="dir"><i class="ph ph-magnifying-glass"></i><span class="sep"></span><i class="ph-fill ph-bell"></i><i class="ph-fill ph-chat-circle"></i><span class="avatar">MA</span></div>
+    <div class="dir"><i class="ph ph-magnifying-glass"></i><span class="entrar">Acessar</span></div>
   </nav>
   <div class="miolo">
     <div class="migalha"><a>Painel</a><span class="s">/</span><a>Cursos</a><span class="s">/</span><a>Gabinete</a></div>
@@ -276,6 +300,25 @@ h1{margin:0 0 22px;font-size:32px;font-weight:700}
     <div class="campo-sel">Gabinete <i class="ph ph-caret-up-down"></i></div>
     <div class="busca"><span>Buscar cursos</span><b><i class="ph-bold ph-magnifying-glass"></i></b></div>
     <div class="cat-lista">Gabinete<br><a class="item" id="link-acesso"><i class="ph-bold ph-caret-right" style="color:#555"></i>Acesso ao GABINETE</a></div>
+  </div>
+</section>
+
+<!-- ============ 2b. Login do Moodle ============ -->
+<section class="tela" id="tela-login">
+  <nav class="nav">
+    <a class="logo"><img src="https://proe.uems.br/pluginfile.php/1/core_admin/logo/0x200/1781639591/logo-uems.png" alt="UEMS" onerror="this.parentNode.classList.add('sem-img')"><span class="txt">UEMS</span></a>
+    <div class="menu"><a>Início</a><a>Painel</a><a>Meus Espaços Virtuais</a></div>
+    <div class="dir"><i class="ph ph-magnifying-glass"></i><span class="entrar">Acessar</span></div>
+  </nav>
+  <div class="login-fundo">
+    <div class="login-card">
+      <a class="logo"><img src="https://proe.uems.br/pluginfile.php/1/core_admin/logo/0x200/1781639591/logo-uems.png" alt="UEMS" onerror="this.parentNode.classList.add('sem-img')"><span class="txt">UEMS</span></a>
+      <div class="login-aviso">Para acessar o Gabinete, entre com seu usuário e senha institucionais da UEMS.</div>
+      <div class="f"><label>Nome de usuário</label><input id="login-usuario" autocomplete="off"></div>
+      <div class="f"><label>Senha</label><input id="login-senha" type="password" autocomplete="off"></div>
+      <button class="btn" id="login-acessar">Acessar</button>
+      <a class="perdeu">Perdeu a senha?</a>
+    </div>
   </div>
 </section>
 
@@ -410,7 +453,6 @@ h1{margin:0 0 22px;font-size:32px;font-weight:700}
   </div>
 </section>
 
-<!-- bastidores: Planilha e pasta no Drive do Gabinete -->
 <!-- ficha de inscrição gerada (PDF) -->
 <div class="modal" id="modal-pdf">
   <div class="folha" id="folha">
@@ -556,19 +598,36 @@ h1{margin:0 0 22px;font-size:32px;font-weight:700}
       try { await roteiro(M); } catch (e) { console.error(e); }
       top.postMessage({ motion: 'end' }, '*');
     };
+    // pausa/retoma vindos da página que embute (ex.: Moodle). O início é sempre pelo botão.
     addEventListener('message', function (e) {
       var d = e.data || {};
-      if (d.motion === 'start') go();
       if (d.motion === 'pause') pausado = true;
       if (d.motion === 'resume') pausado = false;
     });
-    var pronto = function () { top.postMessage({ motion: 'ready' }, '*'); if (window === top) go(); };
+    M.iniciar = go;
+    var pronto = function () { top.postMessage({ motion: 'ready' }, '*'); };
     document.readyState === 'complete' ? pronto() : addEventListener('load', pronto);
   };
   window.Motion = M;
 })();
 </script>
 <div class="legenda" id="legenda"><b id="leg-n">1/6</b><div><strong id="leg-t"></strong><span id="leg-i"></span></div></div>
+<div class="inicio" id="inicio">
+  <div class="caixa">
+    <div class="ic"><i class="ph-fill ph-play"></i></div>
+    <h3>Como se inscrever na Eleição de Coordenadores</h3>
+    <p>Acompanhe, em 6 etapas, o caminho completo da inscrição pelo Moodle da PROE:</p>
+    <ol>
+      <li>Acessar proe.uems.br e o card GABINETE</li>
+      <li>Entrar com login e senha institucionais</li>
+      <li>Ler e aceitar o Termo de Compromisso</li>
+      <li>Preencher os dados do candidato</li>
+      <li>Gerar a ficha e assinar no Gov.br</li>
+      <li>Enviar a ficha assinada</li>
+    </ol>
+    <button type="button" id="btn-comecar"><i class="ph-fill ph-play-circle"></i>Começar passo a passo</button>
+  </div>
+</div>
 <div class="fim" id="fim"><div class="caixa"><h3>Inscrição concluída</h3><p>Em caso de dúvidas, encaminhe um e-mail para <a href="mailto:proe@uems.br">proe@uems.br</a>.</p><button onclick="location.replace(location.pathname + '?v=' + Date.now())"><i class="ph-bold ph-arrow-counter-clockwise"></i> Assistir novamente</button></div></div>
 <script>
 const $ = (s) => document.querySelector(s);
@@ -605,8 +664,8 @@ let nCap = 0;
 const capOrig = Motion.cap;
 const INSTR = {
   'Portal da PROE': 'Acesse proe.uems.br e clique no card GABINETE.',
-  'Acesso ao Gabinete': 'Entre em Acesso ao GABINETE, abra a aba Eleição de Coordenadores e clique em Candidatar-se.',
-  'Termo de compromisso': 'Leia o Termo de Compromisso, marque o aceite e clique em Continuar.',
+  'Login no Moodle': 'Ao clicar em Acesso ao GABINETE, o Moodle pede login: entre com seu usuário e senha institucionais da UEMS.',
+  'Termo de compromisso': 'Abra a aba Eleição de Coordenadores, clique em Candidatar-se, leia o Termo de Compromisso, marque o aceite e clique em Continuar.',
   'Dados do candidato': 'Preencha seus dados e os do curso que pretende coordenar. Depois, clique em Continuar.',
   'Requerimento e assinatura Gov.br': 'Clique em Gerar Requerimento (PDF), assine o arquivo baixado no Portal Gov.br (assinador.iti.br) e clique em Já assinei, continuar.',
   'Envio ao Gabinete': 'Anexe o PDF assinado e clique em Enviar inscrição. O requerimento segue para o Drive do Gabinete da PROE.',
@@ -637,14 +696,23 @@ Motion.run(async (M) => {
   await M.wait(700);
   await M.click(gab, { rolar: false, pausa: 450 });
 
-  // 2. Gabinete > Acesso ao GABINETE > Eleição de Coordenadores
-  M.cap('Acesso ao Gabinete');
+  // 2. Gabinete > Acesso ao GABINETE > login no Moodle
   tela('cat');
   await M.wait(1300);
   const acesso = $('#link-acesso');
   await M.mostrar(acesso, { rolar: false });
   acesso.classList.add('hover');
   await M.click(acesso, { rolar: false, pausa: 400 });
+  M.cap('Login no Moodle');
+  tela('login');
+  await M.wait(1400);
+  await M.type('#login-usuario', 'marcos.arantes', { delay: 45, limpar: true });
+  await M.type('#login-senha', 'senhaexemplo', { delay: 45, limpar: true });
+  await M.wait(300);
+  const acessar = await M.click('#login-acessar', { rolar: false, pausa: 200 });
+  acessar.innerHTML = '<span class="girar"></span>Entrando…';
+  await M.wait(1100);
+  acessar.textContent = 'Acessar';
   tela('curso');
   await M.wait(1800);
   await M.click('#tab-eleicao', { rolar: false, pausa: 200 });
@@ -762,6 +830,12 @@ Motion.run(async (M) => {
   $('#legenda').classList.remove('on');
   $('#fim').classList.add('on');
 });
+
+// Só começa ao clicar em "Começar passo a passo".
+// Em "Assistir novamente" (?v= na URL) a pessoa já escolheu ver: começa direto.
+function comecar() { $('#inicio').hidden = true; Motion.iniciar(); }
+$('#btn-comecar').addEventListener('click', comecar);
+if (/[?&]v=/.test(location.search)) comecar();
 </script>
 </body>
 </html>
