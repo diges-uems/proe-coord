@@ -15,7 +15,8 @@
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
-html{scroll-behavior:auto}
+html{scroll-behavior:auto;overflow-x:hidden;scrollbar-width:none}
+html::-webkit-scrollbar{display:none}
 body{margin:0;background:#fff;color:var(--tinta);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif}
 a{color:inherit;text-decoration:none}
 button{font:inherit;cursor:pointer}
@@ -530,7 +531,8 @@ h1{margin:0 0 22px;font-size:32px;font-weight:700}
     cur.style.cssText = 'position:fixed;left:0;top:0;z-index:2147483647;pointer-events:none;filter:drop-shadow(0 2px 3px rgba(0,0,0,.35))';
     ripple = document.createElement('div');
     ripple.style.cssText = 'position:fixed;width:36px;height:36px;margin:-18px 0 0 -18px;border-radius:50%;background:rgba(200,168,75,.5);z-index:2147483646;pointer-events:none;opacity:0';
-    document.body.append(ripple, cur);
+    // fora do body: o body recebe zoom para caber na largura, o cursor não
+    document.documentElement.append(ripple, cur);
     desenhar();
   }
   function desenhar() { cur.style.transform = 'translate(' + (pos[0] - 4) + 'px,' + (pos[1] - 2) + 'px)'; }
@@ -804,7 +806,7 @@ Motion.run(async (M) => {
   doc.className = 'voando';
   doc.innerHTML = '<span class="pdf">PDF</span><h5>FICHA DE INSCRIÇÃO<br>assinada Gov.br</h5><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>';
   doc.style.left = (b.left) + 'px'; doc.style.top = (b.top - 200) + 'px'; doc.style.transform = 'scale(.35)'; doc.style.opacity = '0';
-  document.body.append(doc);
+  document.documentElement.append(doc);
   await M.wait(60);
   doc.style.opacity = '1'; doc.style.transform = 'rotate(-3deg)'; doc.style.left = (innerWidth - 330) + 'px'; doc.style.top = '240px';
   await M.wait(1100);
@@ -831,6 +833,12 @@ Motion.run(async (M) => {
   $('#legenda').classList.remove('on');
   $('#fim').classList.add('on');
 });
+
+// A cena foi desenhada para ~1060px. Em telas/iframes menores (Moodle) reduz tudo
+// proporcionalmente em vez de criar barra de rolagem horizontal.
+function ajustarEscala() { document.body.style.zoom = Math.min(1, innerWidth / 1060); }
+ajustarEscala();
+addEventListener('resize', ajustarEscala);
 
 // Só começa ao clicar em "Começar passo a passo".
 // Em "Assistir novamente" (?v= na URL) a pessoa já escolheu ver: começa direto.
