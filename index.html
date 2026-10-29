@@ -548,9 +548,9 @@ h1{margin:0 0 22px;font-size:32px;font-weight:700}
   <div class="caixa">
     <div class="ic"><i class="ph-fill ph-play"></i></div>
     <h3>Como se inscrever na Eleição de Coordenadores</h3>
-    <p>Acompanhe, em 4 etapas, o preenchimento da inscrição na aba Eleição de Coordenadores do Gabinete:</p>
+    <p>Acompanhe, em 4 etapas, o preenchimento da inscrição no Gabinete da PROE:</p>
     <ol>
-      <li>Ler e aceitar o Termo de Compromisso</li>
+      <li>Abrir a aba Eleição de Coordenadores e aceitar o Termo de Compromisso</li>
       <li>Preencher os dados do candidato</li>
       <li>Gerar a ficha e assinar no Gov.br</li>
       <li>Enviar a ficha assinada</li>
@@ -617,7 +617,7 @@ Motion.move = (x, y, ms) => moveOrig(x, y, (ms || 700) * VEL);
 let nCap = 0;
 const capOrig = Motion.cap;
 const INSTR = {
-  'Termo de compromisso': 'Clique em Candidatar-se, leia o Termo de Compromisso, marque o aceite e clique em Continuar.',
+  'Termo de compromisso': 'Abra a aba Eleição de Coordenadores, clique em Candidatar-se, leia o Termo de Compromisso, marque o aceite e clique em Continuar.',
   'Dados do candidato': 'Preencha seus dados, escolha a unidade e depois o curso que pretende coordenar (o código e-MEC é preenchido sozinho). Depois, clique em Continuar.',
   'Requerimento e assinatura Gov.br': 'Clique em Gerar Requerimento (PDF), assine o arquivo baixado no Portal Gov.br (assinador.iti.br) e clique em Já assinei, continuar.',
   'Envio ao Gabinete': 'Anexe o PDF assinado e clique em Enviar inscrição. O requerimento segue para o Drive do Gabinete da PROE.',
@@ -636,13 +636,16 @@ function zerarCampos() {
   $('#unidade').value = ''; $('#unidade').dispatchEvent(new Event('change'));
   $('#seguir1').disabled = true;
 }
-secao('eleicao');
+secao('apres');
 zerarCampos();
 addEventListener('pageshow', zerarCampos);
 Motion.run(async (M) => {
-  // 1. Termo de compromisso (começa na aba Eleição de Coordenadores)
+  // 1. Termo de compromisso: abre a aba Eleição de Coordenadores
   M.cap('Termo de compromisso');
-  await M.wait(1200);
+  await M.wait(1500);
+  await M.click('#tab-eleicao', { rolar: false, pausa: 200 });
+  secao('eleicao');
+  await M.wait(900);
   await M.mostrar($('#candidatar'), { ms: 800 });
   await M.wait(500);
   await M.click('#candidatar', { rolar: false, pausa: 300 });
