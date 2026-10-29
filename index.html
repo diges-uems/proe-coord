@@ -40,21 +40,6 @@ button{font:inherit;cursor:pointer}
 .entrar{font-size:14px;font-weight:600;color:var(--azul)}
 .visit{font-size:13px;color:#555}.visit .entrar{font-size:13px}
 
-/* ---------- página inicial ---------- */
-.hero{height:330px;background:
-  linear-gradient(rgba(0,79,158,.18),rgba(0,47,107,.25)),
-  url("https://proe.uems.br/pluginfile.php/1/theme_almondb/sliderimage1/1781639591/uems.png") center 38%/cover,
-  linear-gradient(120deg,#0a4fa6,#1f6fd0 55%,#0b3f86)}
-.titulo-sec{text-align:center;margin:44px 0 30px}
-.titulo-sec h2{display:inline-block;margin:0;padding-bottom:8px;font-size:20px;font-weight:900;letter-spacing:1px;color:var(--azul);border-bottom:4px solid #d6d9dd;border-radius:0 0 2px 2px}
-.titulo-sec h2 b{display:inline-block;width:12px;height:12px;border-radius:50%;background:#d6d9dd;margin:0 10px;vertical-align:1px}
-.cards{width:906px;margin:0 auto 60px;display:grid;grid-template-columns:repeat(3,286px);gap:24px 24px}
-.card{height:155px;border-radius:30px 5px;padding:26px 30px;color:#fff;background:linear-gradient(var(--azul),var(--azul-esc));box-shadow:0 3px 9px rgba(0,0,0,.3),0 1px 3px rgba(0,0,0,.2);transition:transform .25s,box-shadow .25s}
-.card.hover{transform:translateY(-4px);box-shadow:0 10px 22px rgba(0,0,0,.32)}
-.card h3{margin:0 0 18px;display:flex;align-items:center;gap:14px;font-size:24px;font-weight:700;letter-spacing:.3px}
-.card h3 i{font-size:30px}
-.card p{margin:0;font-size:13.5px;line-height:1.5;opacity:.95}
-
 /* ---------- miolo das páginas internas ---------- */
 .miolo{width:1008px;margin:0 auto;padding:44px 0 80px}
 .migalha{font-size:11px;color:var(--tinta);display:flex;gap:7px;margin-bottom:10px}
@@ -64,13 +49,7 @@ h1{margin:0 0 22px;font-size:32px;font-weight:700}
 .abas{display:flex;gap:4px;border-bottom:1px solid var(--linha);margin-bottom:24px}
 .abas a{padding:10px 13px 13px;font-weight:600;font-size:14.5px;border-bottom:3px solid transparent;margin-bottom:-1px}
 .abas a.on{border-color:var(--azul)}
-.campo-sel{height:30px;border:1px solid #8f959e;border-radius:6px;padding:0 10px;display:flex;align-items:center;justify-content:space-between;font-size:14px;color:#495057;margin-bottom:22px}
-.busca{display:flex;margin-bottom:36px}
-.busca span{width:162px;height:30px;border:1px solid #8f959e;border-right:0;border-radius:6px 0 0 6px;padding:5px 10px;font-size:12px;color:#8f959e}
-.busca b{width:28px;height:30px;background:#0f6cbf;border-radius:0 6px 6px 0;display:grid;place-items:center;color:#fff;font-size:14px}
-.cat-lista{font-size:14px}
-.cat-lista .item{display:inline-flex;align-items:center;gap:10px;margin:40px 0 0 18px;padding:4px 6px;border-radius:4px;font-size:14px;color:var(--tinta)}
-.cat-lista .item.hover{background:#eef3fa;color:var(--azul)}
+
 
 
 /* ---------- curso Acesso ao GABINETE ---------- */
@@ -259,44 +238,8 @@ h1{margin:0 0 22px;font-size:32px;font-weight:700}
 </head>
 <body>
 
-<!-- ============ 1. Página inicial proe.uems.br ============ -->
-<section class="tela on" id="tela-home">
-  <nav class="nav faixa">
-    <a class="logo"><img src="https://proe.uems.br/pluginfile.php/1/core_admin/logo/0x200/1781639591/logo-uems.png" alt="UEMS" onerror="this.parentNode.classList.add('sem-img')"><span class="txt">UEMS</span></a>
-    <div class="menu"><a>PROE<i class="ph ph-caret-down"></i></a><a>Espaços Virtuais<i class="ph ph-caret-down"></i></a></div>
-    <div class="dir"><i class="ph ph-magnifying-glass"></i><span class="entrar">Acessar</span></div>
-  </nav>
-  <div class="hero"></div>
-  <div class="titulo-sec"><h2>PROE<b></b>DIVISÕES</h2></div>
-  <div class="cards">
-    <a class="card"><h3><i class="ph-fill ph-bank"></i>DARPP</h3><p>Divisão de Avaliação, Reconhecimento, Projetos Pedagógicos</p></a>
-    <a class="card"><h3><i class="ph-fill ph-file-text"></i>DEPPE</h3><p>Divisão de Estágios, Programas e Projetos de Ensino</p></a>
-    <a class="card" id="card-gab"><h3><i class="ph-fill ph-student"></i>GABINETE</h3><p style="margin-top:28px">Gabinete</p></a>
-    <a class="card"><h3><i class="ph-bold ph-person-simple-walk"></i>DIND</h3><p>Divisão de Ingresso Discente</p></a>
-    <a class="card"><h3><i class="ph-fill ph-identification-card"></i>ENADE</h3><p>Divisão de Gestão do ENADE e Indicadores da Educação Superior</p></a>
-    <a class="card"><h3><i class="ph-fill ph-chalkboard-teacher"></i>PIBID</h3><p>Programa Institucional de Bolsa de Iniciação à Docência</p></a>
-  </div>
-</section>
-
-<!-- ============ 2. Categoria Gabinete ============ -->
-<section class="tela" id="tela-cat">
-  <nav class="nav">
-    <a class="logo"><img src="https://proe.uems.br/pluginfile.php/1/core_admin/logo/0x200/1781639591/logo-uems.png" alt="UEMS" onerror="this.parentNode.classList.add('sem-img')"><span class="txt">UEMS</span></a>
-    <div class="menu"><a class="ativo">Início</a><a>Painel</a><a>Meus Espaços Virtuais</a></div>
-    <div class="dir"><i class="ph ph-magnifying-glass"></i><span class="entrar">Acessar</span></div>
-  </nav>
-  <div class="miolo">
-    <div class="migalha"><a>Painel</a><span class="s">/</span><a>Cursos</a><span class="s">/</span><a>Gabinete</a></div>
-    <h1>Gabinete</h1>
-    <div class="abas"><a class="on">Categoria</a><a>Mais <i class="ph ph-caret-down" style="font-size:11px"></i></a></div>
-    <div class="campo-sel">Gabinete <i class="ph ph-caret-up-down"></i></div>
-    <div class="busca"><span>Buscar cursos</span><b><i class="ph-bold ph-magnifying-glass"></i></b></div>
-    <div class="cat-lista">Gabinete<br><a class="item" id="link-acesso"><i class="ph-bold ph-caret-right" style="color:#555"></i>Acesso ao GABINETE</a></div>
-  </div>
-</section>
-
 <!-- ============ 3. Curso Acesso ao GABINETE ============ -->
-<section class="tela" id="tela-curso">
+<section class="tela on" id="tela-curso">
   <nav class="nav">
     <a class="logo"><img src="https://proe.uems.br/pluginfile.php/1/core_admin/logo/0x200/1781639591/logo-uems.png" alt="UEMS" onerror="this.parentNode.classList.add('sem-img')"><span class="txt">UEMS</span></a>
     <div class="menu"><a>Início</a><a>Painel</a><a>Meus Espaços Virtuais</a></div>
@@ -600,14 +543,13 @@ h1{margin:0 0 22px;font-size:32px;font-weight:700}
   window.Motion = M;
 })();
 </script>
-<div class="legenda" id="legenda"><b id="leg-n">1/5</b><div><strong id="leg-t"></strong><span id="leg-i"></span></div></div>
+<div class="legenda" id="legenda"><b id="leg-n">1/4</b><div><strong id="leg-t"></strong><span id="leg-i"></span></div></div>
 <div class="inicio" id="inicio">
   <div class="caixa">
     <div class="ic"><i class="ph-fill ph-play"></i></div>
     <h3>Como se inscrever na Eleição de Coordenadores</h3>
-    <p>Acompanhe, em 5 etapas, o caminho completo da inscrição pelo Moodle da PROE:</p>
+    <p>Acompanhe, em 4 etapas, o preenchimento da inscrição na aba Eleição de Coordenadores do Gabinete:</p>
     <ol>
-      <li>Acessar proe.uems.br e entrar no GABINETE (sem login)</li>
       <li>Ler e aceitar o Termo de Compromisso</li>
       <li>Preencher os dados do candidato</li>
       <li>Gerar a ficha e assinar no Gov.br</li>
@@ -643,10 +585,6 @@ const CURSOS = {
 };
 Object.keys(CURSOS).forEach((u) => $('#unidade').add(new Option(u, u)));
 
-function tela(id) {
-  document.querySelectorAll('.tela').forEach((t) => t.classList.toggle('on', t.id === 'tela-' + id));
-  scrollTo(0, 0);
-}
 function passo(n) {
   document.querySelectorAll('.passo').forEach((p) => p.classList.toggle('on', p.id === 'p' + n));
   $('#prog').hidden = !(n >= 1 && n <= 4);
@@ -679,15 +617,14 @@ Motion.move = (x, y, ms) => moveOrig(x, y, (ms || 700) * VEL);
 let nCap = 0;
 const capOrig = Motion.cap;
 const INSTR = {
-  'Portal da PROE': 'Acesse proe.uems.br, clique no card GABINETE e depois em Acesso ao GABINETE. Não é preciso login: o acesso é como visitante.',
-  'Termo de compromisso': 'Abra a aba Eleição de Coordenadores, clique em Candidatar-se, leia o Termo de Compromisso, marque o aceite e clique em Continuar.',
+  'Termo de compromisso': 'Clique em Candidatar-se, leia o Termo de Compromisso, marque o aceite e clique em Continuar.',
   'Dados do candidato': 'Preencha seus dados, escolha a unidade e depois o curso que pretende coordenar (o código e-MEC é preenchido sozinho). Depois, clique em Continuar.',
   'Requerimento e assinatura Gov.br': 'Clique em Gerar Requerimento (PDF), assine o arquivo baixado no Portal Gov.br (assinador.iti.br) e clique em Já assinei, continuar.',
   'Envio ao Gabinete': 'Anexe o PDF assinado e clique em Enviar inscrição. O requerimento segue para o Drive do Gabinete da PROE.',
 };
 Motion.cap = (t) => {
   capOrig(t); nCap++;
-  $('#leg-n').textContent = nCap + '/5'; $('#leg-t').textContent = t; $('#leg-i').textContent = INSTR[t] || '';
+  $('#leg-n').textContent = nCap + '/4'; $('#leg-t').textContent = t; $('#leg-i').textContent = INSTR[t] || '';
   const l = $('#legenda'); l.classList.add('on'); l.classList.remove('troca'); void l.offsetWidth; l.classList.add('troca');
 };
 // ao recarregar (Assistir novamente) o navegador restaura o que já foi digitado: zera tudo
@@ -699,36 +636,15 @@ function zerarCampos() {
   $('#unidade').value = ''; $('#unidade').dispatchEvent(new Event('change'));
   $('#seguir1').disabled = true;
 }
+secao('eleicao');
 zerarCampos();
 addEventListener('pageshow', zerarCampos);
 Motion.run(async (M) => {
-  // 1. Portal da PROE
-  M.cap('Portal da PROE');
-  await M.wait(1500);
-  await M.scroll(null, 300);
-  const gab = $('#card-gab');
-  await M.mostrar(gab, { ms: 900, rolar: false });
-  gab.classList.add('hover');
-  await M.wait(700);
-  await M.click(gab, { rolar: false, pausa: 450 });
-
-  // 2. Gabinete > Acesso ao GABINETE (acesso como visitante, sem login)
-  tela('cat');
-  await M.wait(1300);
-  const acesso = $('#link-acesso');
-  await M.mostrar(acesso, { rolar: false });
-  acesso.classList.add('hover');
-  await M.click(acesso, { rolar: false, pausa: 400 });
-  tela('curso');
-  await M.wait(1800);
-  await M.click('#tab-eleicao', { rolar: false, pausa: 200 });
-  secao('eleicao');
-  await M.wait(900);
-  await M.mostrar($('#candidatar'), { ms: 800 });
-  await M.wait(900);
-
-  // 3. Termo de compromisso
+  // 1. Termo de compromisso (começa na aba Eleição de Coordenadores)
   M.cap('Termo de compromisso');
+  await M.wait(1200);
+  await M.mostrar($('#candidatar'), { ms: 800 });
+  await M.wait(500);
   await M.click('#candidatar', { rolar: false, pausa: 300 });
   passo(1);
   await M.wait(400);
