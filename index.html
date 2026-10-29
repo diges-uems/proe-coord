@@ -328,7 +328,7 @@ h1{margin:0 0 22px;font-size:32px;font-weight:700}
   <nav class="nav">
     <a class="logo"><img src="https://proe.uems.br/pluginfile.php/1/core_admin/logo/0x200/1781639591/logo-uems.png" alt="UEMS" onerror="this.parentNode.classList.add('sem-img')"><span class="txt">UEMS</span></a>
     <div class="menu"><a>Início</a><a>Painel</a><a>Meus Espaços Virtuais</a></div>
-    <div class="dir"><i class="ph ph-magnifying-glass"></i><span class="sep"></span><i class="ph-fill ph-bell"></i><i class="ph-fill ph-chat-circle"></i><span class="avatar">FT</span></div>
+    <div class="dir"><i class="ph ph-magnifying-glass"></i><span class="sep"></span><i class="ph-fill ph-bell"></i><i class="ph-fill ph-chat-circle"></i><span class="avatar">MS</span></div>
   </nav>
   <span class="gaveta"><i class="ph-bold ph-list-bullets"></i></span>
   <div class="miolo">
@@ -472,7 +472,7 @@ h1{margin:0 0 22px;font-size:32px;font-weight:700}
     <p>Declaro ter ciência das condições estabelecidas no EDITAL N.º 164/2026 PROE/UEMS, que todos os dados informados são verdadeiros e que atendo às exigências do item 3.1 do Edital: a) ser docente efetivo(a)…; b) ministrar aulas no curso…; c) possuir conhecimentos mínimos de informática…; d) estar ciente da Resolução COUNI-UEMS n.º 215/2002.</p>
     <p>Declaro, ainda, que concorro à Coordenação de um único curso e que, se eleito(a), me comprometo a: a) 20 horas semanais…; b) formação continuada…; c) encontros de gestão da PROE…; d) agenda de transição a partir de 3 de dezembro de 2026…</p>
     <p class="local">Dourados, MS, 5 de novembro de 2026.</p>
-    <div class="assin"><div class="selo-gov" id="selo-gov"><b>Documento assinado digitalmente</b>FULANO DE TAL<br>Data: 05/11/2026 10:42:17-0400<br>Verifique em https://validar.iti.gov.br</div><span>Assinatura do Candidato</span></div>
+    <div class="assin"><div class="selo-gov" id="selo-gov"><b>Documento assinado digitalmente</b>MÉVIO SEMPRÔNIO<br>Data: 05/11/2026 10:42:17-0400<br>Verifique em https://validar.iti.gov.br</div><span>Assinatura do Candidato</span></div>
   </div>
 </div>
 
@@ -497,9 +497,9 @@ h1{margin:0 0 22px;font-size:32px;font-weight:700}
   <div class="bloco">
     <h6><i class="ph-fill ph-folder" style="color:#e2a400"></i>DRIVE Eleição / Inscrições 2026</h6>
     <div class="pasta" id="pasta">
-      <div class="on"><i class="ph-fill ph-folder a"></i>Beltrano de Tal - Pedagogia - Campo Grande - 113052</div>
-      <div class="on"><i class="ph-fill ph-folder a"></i>Sicrano de Tal - Agronomia - Aquidauana - 45598</div>
-      <div class="novo"><i class="ph-fill ph-folder-open a"></i><b>Fulano de Tal - Pedagogia - Dourados - 113058</b><span class="chip">Nova</span></div>
+      <div class="on"><i class="ph-fill ph-folder a"></i>Caio Tício - Pedagogia - Campo Grande - 113052</div>
+      <div class="on"><i class="ph-fill ph-folder a"></i>Tício Semprônio - Agronomia - Aquidauana - 45598</div>
+      <div class="novo"><i class="ph-fill ph-folder-open a"></i><b>Mévio Semprônio - Pedagogia - Dourados - 113058</b><span class="chip">Nova</span></div>
       <div class="dentro"><i class="ph-fill ph-file-pdf r"></i>ficha-inscricao_assinado.pdf</div>
     </div>
   </div>
@@ -648,7 +648,7 @@ h1{margin:0 0 22px;font-size:32px;font-weight:700}
 <div class="fim" id="fim"><div class="caixa"><h3>Inscrição concluída</h3><p>Em caso de dúvidas, encaminhe um e-mail para <a href="mailto:proe@uems.br">proe@uems.br</a>.</p><button onclick="location.replace(location.pathname + '?v=' + Date.now())"><i class="ph-bold ph-arrow-counter-clockwise"></i> Assistir novamente</button></div></div>
 <script>
 const $ = (s) => document.querySelector(s);
-const CAND = { nome: 'Fulano de Tal', email: 'fulano.tal@uems.br' };
+const CAND = { nome: 'Mévio Semprônio', email: 'mevio.sempronio@uems.br' };
 // Unidade → { curso: código e-MEC } — item 1.1 do Edital N.º 164/2026 (mesma lista do formulário real)
 const CURSOS = {
   'Amambai': { 'Tecnologia em Agroecologia Intercultural Kaiowá e Guarani': '1681771', 'Ciências Sociais': '113050', 'História': '68265' },
@@ -752,7 +752,7 @@ Motion.run(async (M) => {
   M.cap('Login no Moodle');
   tela('login');
   await M.wait(1400);
-  await M.type('#login-usuario', 'fulano.tal', { delay: 45, limpar: true });
+  await M.type('#login-usuario', 'mevio.sempronio', { delay: 45, limpar: true });
   await M.type('#login-senha', 'senhaexemplo', { delay: 45, limpar: true });
   await M.wait(300);
   const acessar = await M.click('#login-acessar', { rolar: false, pausa: 200 });
